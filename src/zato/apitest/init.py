@@ -67,12 +67,12 @@ Scenario: *** REST JSON Demo ***
     Given format "JSON"
     Given header "X-Custom-Header" "MyValue"
     Given request "demo.json"
-    Given JSON Pointer "" in request is set to ""
-    Given JSON Pointer "" in request is set to an integer ""
-    Given JSON Pointer "" in request is set to a list ""
-    Given JSON Pointer "" in request is set to a random string
-    Given JSON Pointer "" in request is set to a random integer
-    Given JSON Pointer "" in request is set to any of ""
+    Given JSON Pointer "" in request is ""
+    Given JSON Pointer "" in request is an integer ""
+    Given JSON Pointer "" in request is a list ""
+    Given JSON Pointer "" in request is a random string
+    Given JSON Pointer "" in request is a random integer
+    Given JSON Pointer "" in request is any of ""
 
     When the URL is invoked
 
@@ -104,10 +104,10 @@ Scenario: *** XML/SOAP Demo ***
     Given format "XML"
     Given namespace prefix "demo" of "http://example.com/demo"
     Given request "demo.xml"
-    Given XPath "//howdy" in request is set to "partner"
-    Given XPath "//hello" in request is set to a random string
-    Given XPath "//world" in request is set to a random integer
-    Given XPath "//and-beyond" in request is set to one of "Arcturus, Ανδρομέδα, ほうおう座"
+    Given XPath "//howdy" in request is "partner"
+    Given XPath "//hello" in request is a random string
+    Given XPath "//world" in request is a random integer
+    Given XPath "//and-beyond" in request is one of "Arcturus, Ανδρομέδα, ほうおう座"
 
     When the URL is invoked
 
