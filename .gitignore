@@ -1,0 +1,8 @@
+/apitest
+.coverage
+.idea/
+*.pyc
+*.pyo
+*.egg-info*
+*.*~
+~
