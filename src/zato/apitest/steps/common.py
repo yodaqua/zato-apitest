@@ -211,6 +211,12 @@ def then_header_has_at(ctx, expected_header, expected_value, idx_start, idx_end)
 
 # ################################################################################################################################
 
+@then('store "{path}" under "{name}"')
+def then_store_path_under_name(ctx, response):
+    pass
+
+# ################################################################################################################################
+
 @then('response is equal to "{response}"')
 def then_response_is_equal_to(ctx, response):
     pass

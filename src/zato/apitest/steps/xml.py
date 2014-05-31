@@ -128,3 +128,28 @@ def then_xpath_is(ctx, elem, **kwargs):
 @handle_xpath(False)
 def then_xpath_is_an_integer(ctx, elem, **kwargs):
     return _assert_xpath_value(ctx, elem, force_type=int, **kwargs)
+
+@then('XPath "{elem}" is a float "{value}"')
+@handle_xpath(False)
+def then_xpath_is_(ctx, elem, value, **kwargs):
+    pass
+
+@then('XPath "{elem}" is empty')
+@handle_xpath(False)
+def then_xpath_is_(ctx, elem, **kwargs):
+    pass
+
+@then('XPath "{elem}" is not empty')
+@handle_xpath(False)
+def then_xpath_is_(ctx, elem, **kwargs):
+    pass
+
+@then('XPath "{elem}" is one of "{value}"')
+@handle_xpath(False)
+def then_xpath_is_(ctx, elem, value, **kwargs):
+    pass
+
+@then('XPath "{elem}" is not one of "{value}"')
+@handle_xpath(False)
+def then_xpath_is_(ctx, elem, value, **kwargs):
+    pass

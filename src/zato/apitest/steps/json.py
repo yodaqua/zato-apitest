@@ -57,7 +57,26 @@ def then_json_pointer_is(ctx, path, value):
 def then_json_pointer_is_an_integer(ctx, path, value):
     pass
 
+@then('JSON Pointer "{path}" is a float "{value}"')
+def then_json_pointer_is_a_float(ctx, path, value):
+    pass
+
 @then('JSON Pointer "{path}" is a list "{value}"')
 def then_json_pointer_is_a_list(ctx, path, value):
     pass
 
+@then('JSON Pointer "{path}" is empty')
+def then_json_pointer_is_empty(ctx, path, value):
+    pass
+
+@then('JSON Pointer "{path}" is not empty')
+def then_json_pointer_is_not_empty(ctx, path, value):
+    pass
+
+@then('JSON Pointer "{path}" is one of "{value}"')
+def then_json_pointer_is_one_of(ctx, path, value):
+    pass
+
+@then('JSON Pointer "{path}" is not one of "{value}"')
+def then_json_pointer_is_not_one_of(ctx, path, value):
+    pass
