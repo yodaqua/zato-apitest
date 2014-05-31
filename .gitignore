@@ -1,4 +1,4 @@
-/apitest
+/apitest-env/
 .coverage
 .idea/
 *.pyc

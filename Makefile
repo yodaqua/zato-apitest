@@ -1,5 +1,5 @@
 
-ENV_NAME=apitest
+ENV_NAME=apitest-env
 
 default: demo
 

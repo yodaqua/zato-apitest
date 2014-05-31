@@ -120,6 +120,10 @@ def given_request(ctx, request_path):
 def given_query_string(ctx, query_string):
     ctx.zato.request.query_string = query_string
 
+@given('date format "{name}" "{format}"')
+def given_date_format(ctx, name, format):
+    ctx.zato.date_formats[name] = format
+
 # ################################################################################################################################
 
 def handle_xpath(is_request):
@@ -165,25 +169,39 @@ def given_xpath_set_to_rand_int(ctx, elem, **ignored):
 def given_xpath_set_to_rand_float(ctx, elem, **ignored):
     elem.text = str(util.rand_float())
 
-@given('XPath "{xpath}" in request is set to a random date')
-@handle_xpath(True)
-def given_xpath_set_to_rand_date(ctx, elem, **ignored):
-    pass
+# ################################################################################################################################
 
-@given('XPath "{xpath}" in request is set to a random date after {date_start}')
+@given('XPath "{xpath}" in request is set to a random date "{format}"')
 @handle_xpath(True)
-def given_xpath_set_to_rand_date_after(ctx, elem, date_start, **ignored):
-    pass
+def given_xpath_set_to_rand_date(ctx, elem, format, **ignored):
+    elem.text = util.rand_date(ctx.zato.date_formats[format])
 
-@given('XPath "{xpath}" in request is set to a random date before {date_end}')
+@given('XPath "{xpath}" in request is set to now "{format}"')
 @handle_xpath(True)
-def given_xpath_set_to_rand_date_before(ctx, elem, date_end, **ignored):
-    pass
+def given_xpath_set_to_now(ctx, elem, format, **ignored):
+    elem.text = util.now(format=ctx.zato.date_formats[format])
 
-@given('XPath "{xpath}" in request is set to a random date between {date_start} and {date_end}')
+@given('XPath "{xpath}" in request is set to UTC now "{format}"')
 @handle_xpath(True)
-def given_xpath_set_to_rand_date_between(ctx, elem, date_start, date_end, **ignored):
-    pass
+def given_xpath_set_to_utc_now(ctx, elem, format, **ignored):
+    elem.text = util.utcnow(format=ctx.zato.date_formats[format])
+
+@given('XPath "{xpath}" in request is set to a random date after "{date_start}" "{format}"')
+@handle_xpath(True)
+def given_xpath_set_to_rand_date_after(ctx, elem, date_start, format, **ignored):
+    elem.text = util.date_after(date_start, ctx.zato.date_formats[format])
+
+@given('XPath "{xpath}" in request is set to a random date before "{date_end}" "{format}"')
+@handle_xpath(True)
+def given_xpath_set_to_rand_date_before(ctx, elem, date_end, format, **ignored):
+    elem.text = util.date_before(date_end, ctx.zato.date_formats[format])
+
+@given('XPath "{xpath}" in request is set to a random date between "{date_start}" and "{date_end}" "{format}"')
+@handle_xpath(True)
+def given_xpath_set_to_rand_date_between(ctx, elem, date_start, date_end, format, **ignored):
+    elem.text = util.date_between(date_start, date_end, ctx.zato.date_formats[format])
+
+# ################################################################################################################################
 
 @given('XPath "{xpath}" in request is set to one of "{value}"')
 @handle_xpath(True)

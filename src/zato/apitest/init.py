@@ -33,6 +33,7 @@ def before_feature(context, feature):
     context.zato.request = Bunch()
     context.zato.request.headers = {}
     context.zato.request.ns_map = {}
+    context.zato.request.date_formats = {}
 '''
 
 STEPS = '''# -*- coding: utf-8 -*-
