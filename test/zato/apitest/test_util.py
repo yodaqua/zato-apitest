@@ -11,9 +11,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 # stdlib
 from unittest import TestCase
 
-# Zato
-from zato.apitest import version
 
-class TopLevelModuleTestCase(TestCase):
-    def test_version(self):
-        self.assertEquals('1.0', version)
+class UtilTest(TestCase):
+    def test_new_context(self):
+        pass

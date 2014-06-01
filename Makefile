@@ -1,9 +1,8 @@
 
-.PHONY: test clean
+.PHONY: test
 
 ENV_NAME=apitest-env
 BIN_DIR=$(CURDIR)/$(ENV_NAME)/bin
-
 
 default: demo
 
