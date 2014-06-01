@@ -10,8 +10,8 @@ install:
 	$(CURDIR)/$(ENV_NAME)/bin/pip install -e $(CURDIR)/.
 
 clean:
-	rm -rf $(CURDIR)apitest
-	rm -rf $(CURDIR)src/apitest.egg-info
+	rm -rf $(CURDIR)/apitest-env
+	rm -rf $(CURDIR)/src/apitest.egg-info
 
 demo:
 	$(MAKE) install

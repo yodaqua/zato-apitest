@@ -15,9 +15,6 @@ import os
 from behave.configuration import Configuration
 from behave.runner import Runner
 
-# Click
-import click
-
 # ConfigObj
 from configobj import ConfigObj
 

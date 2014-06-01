@@ -16,7 +16,7 @@ setup(
       name = 'apitest',
       version = version,
 
-      scripts = ['console/apitest'],
+      scripts = ['src/zato/apitest/console/apitest'],
 
       author = 'Dariusz Suchojad',
       author_email = 'dsuch at zato.io',

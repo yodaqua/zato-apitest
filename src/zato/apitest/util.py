@@ -9,14 +9,14 @@ Licensed under LGPLv3, see LICENSE.txt for terms and conditions.
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 # stdlib
-import csv, datetime, operator, os, random, uuid
+import csv, operator, os, random, uuid
 from datetime import timedelta
 
 # Arrow
 from arrow import api as arrow_api
 
 # Bunch
-from bunch import Bunch, bunchify
+from bunch import Bunch
 
 # Dateutil
 from dateutil.parser import parse as parse_dt
@@ -34,6 +34,7 @@ random.seed()
 context = Bunch()
 
 def new_context(old_ctx, environment_dir):
+    context.user_data = {}
     context.date_formats = {'default':'YYYY-MM-DDTHH:mm:ss'}
     context.environment_dir = old_ctx.zato.environment_dir if old_ctx else environment_dir
     context.request = Bunch()

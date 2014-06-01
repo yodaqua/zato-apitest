@@ -44,7 +44,6 @@ def when_the_url_is_invoked(ctx):
     address = ctx.zato.request.get('address')
     url_path = ctx.zato.request.get('url_path')
     qs = ctx.zato.request.get('query_string', '')
-    format = ctx.zato.request.get('format', 'JSON')
 
     if ctx.zato.request.is_xml:
         data = etree.tostring(ctx.zato.request.data_impl, pretty_print=True)
@@ -64,7 +63,6 @@ def when_the_url_is_invoked(ctx):
 
 @given('address "{address}"')
 def given_address(ctx, address):
-    #raise Exception(ctx.zato)
     ctx.zato.request.address = address
 
 @given('URL path "{url_path}"')
@@ -80,7 +78,7 @@ def given_format(ctx, format):
     ctx.zato.request.format = format
 
 @given('user agent is "{value}"')
-def given_format(ctx, format):
+def given_user_agent_is(ctx, value):
     ctx.zato.request.headers['User-Agent'] = value
 
 @given('header "{header}" "{value}"')
@@ -127,6 +125,12 @@ def given_date_format(ctx, name, format):
 
 # ################################################################################################################################
 
+@given('I store "{value}" under "{name}"')
+def i_store_name_under_key(ctx, value, name):
+    ctx.zato.user_data[name] = value
+
+# ################################################################################################################################
+
 @then('context is cleaned up')
 def then_context_is_cleaned_up(ctx):
     ctx.zato = util.new_context(ctx, None)
@@ -162,12 +166,12 @@ def then_header_doesnt_contain(ctx, expected_header, expected_value):
         expected_header, expected_value, value)
 
 @then('header "{expected_header}" exists')
-def then_header_doesnt_contain(ctx, expected_header):
+def then_header_exists(ctx, expected_header):
     value = ctx.zato.response.data.headers.get(expected_header, INVALID)
     assert value != INVALID, 'Header `{}` should be among `{}`'.format(expected_header, ctx.zato.response.headers)
 
 @then('header "{expected_header}" doesn\'t exist')
-def then_header_doesnt_contain(ctx, expected_header):
+def then_header_doesnt_exist(ctx, expected_header):
     value = ctx.zato.response.data.headers.get(expected_header, INVALID)
     assert value == INVALID, 'Header `{}` shouldn\'t be among `{}`'.format(expected_header, ctx.zato.response.headers)
 
@@ -200,7 +204,7 @@ def then_header_ends_with(ctx, expected_header, expected_value):
         expected_header, expected_value, value)
 
 @then('header "{expected_header}" doesn\'t end with')
-def then_header_ends_with(ctx, expected_header, expected_value):
+def then_header_doesnt_end_with(ctx, expected_header, expected_value):
     value = ctx.zato.response.data.headers[expected_header]
     assert not value.endswith(expected_value), 'Expected for header `{}` not to end with `{}` yet it\'s `{}`'.format(
         expected_header, expected_value, value)

@@ -12,7 +12,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from behave import given, then
 
 # JSON Pointers
-from jsonpointer import resolve_pointer as get_pointer, set_pointer
+from jsonpointer import set_pointer
 
 # Zato
 from .. import util
@@ -28,7 +28,7 @@ def given_json_pointer_in_request_is_an_integer(ctx, path, value):
     set_pointer(ctx.zato.request.data_impl, path, int(value))
 
 @given('JSON Pointer "{path}" in request is a float "{value}"')
-def given_json_pointer_in_request_is_an_integer(ctx, path, value):
+def given_json_pointer_in_request_is_a_float(ctx, path, value):
     set_pointer(ctx.zato.request.data_impl, path, float(value))
 
 @given('JSON Pointer "{path}" in request is a list "{value}"')
@@ -44,7 +44,7 @@ def given_json_pointer_in_request_is_a_random_integer(ctx, path):
     set_pointer(ctx.zato.request.data_impl, path, util.rand_int())
 
 @given('JSON Pointer "{path}" in request is any of "{value}"')
-def given_json_pointer_in_request_is_a_list(ctx, path, value):
+def given_json_pointer_in_request_is_any_of(ctx, path, value):
     set_pointer(ctx.zato.request.data_impl, path, util.any_from_list(value))
 
 # ################################################################################################################################

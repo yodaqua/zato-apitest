@@ -8,6 +8,6 @@ Licensed under LGPLv3, see LICENSE.txt for terms and conditions.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from . import common
-from . import json
-from . import xml
+from . import common # noqa
+from . import json # noqa
+from . import xml # noqa

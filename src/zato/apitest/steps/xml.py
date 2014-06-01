@@ -8,12 +8,11 @@ Licensed under LGPLv3, see LICENSE.txt for terms and conditions.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-# stdlib
-import csv
-from random import choice
-
 # Behave
 from behave import given, then
+
+# lxml
+from lxml import etree
 
 # Zato
 from .. import util
@@ -45,7 +44,7 @@ def handle_xpath(is_request):
 
 @given('XPath "{xpath}" in request is "{value}"')
 @handle_xpath(True)
-def given_xpath_set_to_rand_string(ctx, elem, value, **ignored):
+def given_xpath_in_request_is(ctx, elem, value, **ignored):
     elem.text = value
 
 @given('XPath "{xpath}" in request is a random string')
@@ -131,25 +130,25 @@ def then_xpath_is_an_integer(ctx, elem, **kwargs):
 
 @then('XPath "{elem}" is a float "{value}"')
 @handle_xpath(False)
-def then_xpath_is_(ctx, elem, value, **kwargs):
+def then_xpath_is_a_float(ctx, elem, value, **kwargs):
     pass
 
 @then('XPath "{elem}" is empty')
 @handle_xpath(False)
-def then_xpath_is_(ctx, elem, **kwargs):
+def then_xpath_is_empty(ctx, elem, **kwargs):
     pass
 
 @then('XPath "{elem}" is not empty')
 @handle_xpath(False)
-def then_xpath_is_(ctx, elem, **kwargs):
+def then_xpath_is_not_empty(ctx, elem, **kwargs):
     pass
 
 @then('XPath "{elem}" is one of "{value}"')
 @handle_xpath(False)
-def then_xpath_is_(ctx, elem, value, **kwargs):
+def then_xpath_is_one_of(ctx, elem, value, **kwargs):
     pass
 
 @then('XPath "{elem}" is not one of "{value}"')
 @handle_xpath(False)
-def then_xpath_is_(ctx, elem, value, **kwargs):
+def then_xpath_is_not_one_of(ctx, elem, value, **kwargs):
     pass

@@ -7,10 +7,15 @@ configobj==5.0.5
 datadiff==1.1.5
 distribute==0.6.34
 enum34==1.0
+flake8==2.1.0
 jsonpointer==1.3
 lxml==3.3.5
+mccabe==0.2.1
+nose==1.3.3
 parse==1.6.4
 parse-type==0.3.4
+pep8==1.5.7
+pyflakes==0.8.1
 python-dateutil==2.2
 requests==2.3.0
 six==1.6.1
