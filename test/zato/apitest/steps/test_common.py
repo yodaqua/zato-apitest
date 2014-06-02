@@ -21,7 +21,7 @@ from lxml import etree
 # Zato
 from zato.apitest import util
 from zato.apitest.steps import common
-from zato.apitest.test import xml_c14nize, XMLEchoAdapter
+from zato.apitest.test import JSONEchoAdapter, xml_c14nize, XMLEchoAdapter
 
 class CommonTestCase(TestCase):
     def test_when_the_url_is_invoked_xml(self):
@@ -55,3 +55,34 @@ class CommonTestCase(TestCase):
 
         # Confirms the body we sent was received.
         self.assertEquals(xml_c14nize(sent_request['request']['data']), data_c14n)
+
+    def test_when_the_url_is_invoked_json(self):
+
+        data = {'a': {'b': 'cc'}}
+
+        method = 'POST'
+        address = 'http://{}.example.com'.format(util.rand_string())
+        url_path = '/{}'.format(util.rand_string())
+        qs = '?{}={}'.format(*util.rand_string(2))
+        headers = {util.rand_string():util.rand_string(), util.rand_string():util.rand_string()}
+
+        ctx = Bunch(zato=Bunch(request=Bunch()))
+
+        ctx.zato.request.is_xml = False
+        ctx.zato.request.is_json = True
+        ctx.zato.request.data = data
+        ctx.zato.request.method = method
+        ctx.zato.request.address = address
+        ctx.zato.request.url_path = url_path
+        ctx.zato.request.qs = qs
+        ctx.zato.request.headers = headers
+
+        common.when_the_url_is_invoked(ctx, [JSONEchoAdapter({})])
+        sent_request = loads(ctx.zato.response.data_impl['data'])
+
+        # Confirms the headers we sent were received.
+        for key, value in headers.items():
+            self.assertEquals(sent_request['request']['headers'][key], value)
+
+        # Confirms the body we sent was received.
+        self.assertDictEqual(loads(sent_request['request']['data']), data)

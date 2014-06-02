@@ -63,6 +63,7 @@ def when_the_url_is_invoked(ctx, adapters=None):
 
     if ctx.zato.request.is_xml:
         ctx.zato.response.data_impl = etree.fromstring(ctx.zato.response.data.text.encode('utf-8'))
+
     elif ctx.zato.request.is_json:
         ctx.zato.response.data_impl = json.loads(ctx.zato.response.data.text)
 

@@ -11,9 +11,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 # stdlib
 from json import dumps
 
-# Bunch
-from bunch import bunchify, unbunchify
-
 # lxml
 from lxml import etree
 
@@ -53,3 +50,7 @@ class EchoAdapter(TestAdapter):
 class XMLEchoAdapter(EchoAdapter):
     def serialize(self, data):
         return '<response><![CDATA[{}]]></response>'.format(data).encode('utf-8')
+
+class JSONEchoAdapter(EchoAdapter):
+    def serialize(self, data):
+        return dumps({'data': data.encode('utf-8')})
