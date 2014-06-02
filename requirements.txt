@@ -19,5 +19,6 @@ pep8==1.5.7
 pyflakes==0.8.1
 python-dateutil==2.2
 requests==2.3.0
+requests-testadapter==0.3.0
 six==1.6.1
 wsgiref==0.1.2

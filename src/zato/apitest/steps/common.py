@@ -39,19 +39,26 @@ INVALID = 'invalid-{}'.format(uuid.uuid4().hex)
 # ################################################################################################################################
 
 @when('the URL is invoked')
-def when_the_url_is_invoked(ctx):
+def when_the_url_is_invoked(ctx, adapters=None):
+    adapters = adapters or []
     method = ctx.zato.request.get('method', 'GET')
     address = ctx.zato.request.get('address')
     url_path = ctx.zato.request.get('url_path')
     qs = ctx.zato.request.get('query_string', '')
 
     if ctx.zato.request.is_xml:
-        data = etree.tostring(ctx.zato.request.data_impl, pretty_print=True)
+        data = etree.tostring(ctx.zato.request.data_impl)
     elif ctx.zato.request.is_json:
         data = json.dumps(ctx.zato.request.data, indent=2)
 
     ctx.zato.response = Bunch()
-    ctx.zato.response.data = req_api.request(
+
+    s = req_api.sessions.Session()
+    for adapter in adapters:
+        s.mount('http://', adapter)
+        s.mount('https://', adapter)
+
+    ctx.zato.response.data = s.request(
         method, '{}{}{}'.format(address, url_path, qs), data=data, headers=ctx.zato.request.headers)
 
     if ctx.zato.request.is_xml:

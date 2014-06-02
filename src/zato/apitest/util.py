@@ -61,8 +61,13 @@ def any_from_list(value):
 
 # ################################################################################################################################
 
-def rand_string():
-    return uuid.uuid4().hex
+def rand_string(count=1):
+    # First character is 'a' so it nevers starts with a digit.
+    # Some parsers will insist a string is an integer if they notice a digit at idx 0.
+    if count == 1:
+        return 'a' + uuid.uuid4().hex
+    else:
+        return ['a' + uuid.uuid4().hex for x in range(count)]
 
 def rand_int(min=0, max=100):
     return random.choice(range(min, max))
