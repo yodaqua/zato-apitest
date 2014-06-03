@@ -67,30 +67,27 @@ Scenario: *** REST JSON Demo ***
     Given format "JSON"
     Given header "X-Custom-Header" "MyValue"
     Given request "demo.json"
-    Given JSON Pointer "" in request is ""
-    Given JSON Pointer "" in request is an integer ""
-    Given JSON Pointer "" in request is a list ""
-    Given JSON Pointer "" in request is a random string
-    Given JSON Pointer "" in request is a random integer
-    Given JSON Pointer "" in request is any of ""
+    Given JSON Pointer "/a" in request is "abc"
+    Given JSON Pointer "/foo" in request is an integer "7"
+    Given JSON Pointer "/bar" in request is a list "1,2,3,4,5"
+    Given JSON Pointer "/baz" in request is a random string
+    Given JSON Pointer "/hi5" in request is one of "a,b,c,d,e"
 
     When the URL is invoked
 
-    Then JSON Pointer "/action/message" is "OK, updated"
+    Then JSON Pointer "/action/msg" is "Now, is that cool or is that cool?"
     And JSON Pointer "/action/code" is an integer "0"
-    And JSON Pointer "/action/flow" is a list "Accepted, Done"
+    And JSON Pointer "/action/flow" is a list "Ack,Done"
     And status is "200"
     And header "X-My-Header" is "Cool"
     And header "X-Another-Header" isn't "Foo"
     And header "X-Yet-Another-Header" contains "Baz"
     And header "X-Still-More" doesn't contain "Bar"
-    And header "Connection" exists
-    And header "X-Foo" doesn't exist
     And header "X-Should-Be-Empty" is empty
     And header "X-But-This-One-Should-Not" isn't empty
 
     # You can also compare responses directly inline ..
-    And response is equal to "{"action":{"code":0, "msg":"Now, is that cool or is that cool?"}}"
+    And response is equal to "{"action":{"code":0, "msg":"Now, is that cool or is that cool?", "flow":["Ack", "Done"]}}"
 
     # .. or read them from disk.
     And response is equal to that from "demo.json"
@@ -116,7 +113,7 @@ Scenario: *** XML/SOAP Demo ***
 """.encode('utf-8')
 
 DEMO_JSON_REQ = """{"hello":"world"}"""
-DEMO_JSON_RESP = """{"action":{"code":0, "msg":"Now, is that cool or is that cool?"}}"""
+DEMO_JSON_RESP = """{"action":{"code":0, "msg":"Now, is that cool or is that cool?", "flow":["Ack", "Done"]}}"""
 
 # No demo response for XML, we're not comparing them directly yet.
 DEMO_XML_REQ = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">

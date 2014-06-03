@@ -256,4 +256,4 @@ def then_response_is_equal_to(ctx, expected):
 @then('response is equal to that from "{path}"')
 @needs_json
 def then_response_is_equal_to_that_from(ctx, path):
-    return json_response_is_equal_to(ctx, util.get_data(ctx, 'response', path))
+    return json_response_is_equal_to(ctx, json.loads(util.get_data(ctx, 'response', path)))

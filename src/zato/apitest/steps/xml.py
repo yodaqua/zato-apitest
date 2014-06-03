@@ -28,11 +28,13 @@ def handle_xpath(is_request):
             data_impl = ctx.zato.request.data_impl if is_request else ctx.zato.response.data_impl
 
             elem = data_impl.xpath(xpath, namespaces=ctx.zato.request.ns_map)
-            if not elem:
-                raise ValueError('No `{}` path in `{}`'.format(xpath, data))
+            if elem is None or (isinstance(elem, list) and not elem):
+                raise ValueError('No `{}` path in `{}` with NS map `{}`'.format(xpath, data, ctx.zato.request.ns_map))
 
             if len(elem) > 1:
-                raise ValueError('Path `{}` points to more than one element in `{}`'.format(xpath, data))
+                raise ValueError(
+                    'Path `{}` points to more than one element in `{}` with NS map`{}`'.format(
+                        xpath, data, ctx.zato.request.ns_map))
 
             elem = elem[0]
             if 'value' in kwargs:
