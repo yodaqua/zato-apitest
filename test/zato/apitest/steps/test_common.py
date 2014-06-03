@@ -93,7 +93,8 @@ class WhenTestCase(TestCase):
 class GivenTestCase(TestCase):
 
     def setUp(self):
-        self.ctx = util.new_context(None, util.rand_string())
+        self.ctx = Bunch()
+        self.ctx.zato = util.new_context(None, util.rand_string())
 
     def test_given_address(self):
         value = util.rand_string()
@@ -256,7 +257,8 @@ class GivenTestCase(TestCase):
 class ThenTestCase(TestCase):
 
     def setUp(self):
-        self.ctx = util.new_context(None, util.rand_string())
+        self.ctx = Bunch()
+        self.ctx.zato = util.new_context(None, util.rand_string())
         self.ctx.zato.response = Bunch()
         self.ctx.zato.response.data = Bunch()
         self.ctx.zato.response.data.headers = {}
@@ -306,7 +308,7 @@ class ThenTestCase(TestCase):
         self.ctx.zato.response.data.headers[name] = actual
         self.assertTrue(common.then_header_isnt(self.ctx, name, expected))
 
-    def test_then_header_isnt_ok(self):
+    def test_then_header_isnt_not_ok(self):
         name = util.rand_string()
         expected = actual = util.rand_string()
         self.ctx.zato.response.data.headers[name] = actual
@@ -315,95 +317,94 @@ class ThenTestCase(TestCase):
     def test_then_header_contains_ok(self):
         name = util.rand_string()
         substring = util.rand_string()
-        expected = actual = substring + util.rand_string()
+        actual = substring + util.rand_string()
         self.ctx.zato.response.data.headers[name] = actual
         self.assertTrue(common.then_header_contains(self.ctx, name, substring))
 
     def test_then_header_contains_not_ok(self):
         name = util.rand_string()
         substring = util.rand_string()
-        expected = actual = substring + util.rand_string()
+        actual = substring + util.rand_string()
         self.ctx.zato.response.data.headers[name] = actual
         self.assertRaises(AssertionError, common.then_header_contains, self.ctx, name, util.rand_string())
 
     def test_then_header_doesnt_contain_ok(self):
         name = util.rand_string()
         substring = util.rand_string()
-        expected = actual = substring + util.rand_string()
+        actual = substring + util.rand_string()
         self.ctx.zato.response.data.headers[name] = actual
         self.assertTrue(common.then_header_doesnt_contain(self.ctx, name, util.rand_string()))
 
     def test_then_header_doesnt_contain_not_ok(self):
         name = util.rand_string()
         substring = util.rand_string()
-        expected = actual = util.rand_string() + util.rand_string()
+        actual = util.rand_string() + util.rand_string()
         self.ctx.zato.response.data.headers[name] = actual
         self.assertRaises(AssertionError, common.then_header_contains, self.ctx, name, substring)
 
     def test_then_header_exists_ok(self):
         name = util.rand_string()
-        expected = actual = util.rand_string()
+        actual = util.rand_string()
         self.ctx.zato.response.data.headers[name] = actual
         self.assertTrue(common.then_header_exists(self.ctx, name))
 
     def test_then_header_exists_not_ok(self):
         name = util.rand_string()
-        expected = actual = util.rand_string()
+        actual = util.rand_string()
         self.ctx.zato.response.data.headers[name] = actual
         self.assertRaises(AssertionError, common.then_header_exists, self.ctx, util.rand_string())
 
     def test_then_header_doesnt_exist_ok(self):
         name = util.rand_string()
-        expected = actual = util.rand_string()
+        actual = util.rand_string()
         self.ctx.zato.response.data.headers[name] = actual
         self.assertTrue(common.then_header_doesnt_exist(self.ctx, util.rand_string()))
 
     def test_then_header_doesnt_exist_not_ok(self):
         name = util.rand_string()
-        expected = actual = util.rand_string()
+        actual = util.rand_string()
         self.ctx.zato.response.data.headers[name] = actual
         self.assertRaises(AssertionError, common.then_header_doesnt_exist, self.ctx, name)
 
     def test_then_header_is_empty_ok(self):
         name = util.rand_string()
-        expected = actual = ''
+        actual = ''
         self.ctx.zato.response.data.headers[name] = actual
         self.assertTrue(common.then_header_is_empty(self.ctx, name))
 
     def test_then_header_is_empty_not_ok(self):
         name = util.rand_string()
-        expected = ''
         actual = util.rand_string()
         self.ctx.zato.response.data.headers[name] = actual
         self.assertRaises(AssertionError, common.then_header_is_empty, self.ctx, name)
 
     def test_then_header_isnt_empty_ok(self):
         name = util.rand_string()
-        expected = actual = util.rand_string()
+        actual = util.rand_string()
         self.ctx.zato.response.data.headers[name] = actual
         self.assertTrue(common.then_header_isnt_empty(self.ctx, name))
 
     def test_then_header_isnt_empty_not_ok(self):
         name = util.rand_string()
-        expected = util.rand_string()
+        util.rand_string()
         actual = ''
         self.ctx.zato.response.data.headers[name] = actual
         self.assertRaises(AssertionError, common.then_header_isnt_empty, self.ctx, name)
 
-    def test_then_header_isnt_empty_ok(self):
+    def test_then_header_starts_with_ok(self):
         name, prefix = util.rand_string(2)
-        expected = actual = prefix + util.rand_string()
+        actual = prefix + util.rand_string()
         self.ctx.zato.response.data.headers[name] = actual
         self.assertTrue(common.then_header_starts_with(self.ctx, name, prefix))
 
-    def test_then_header_isnt_empty_not_ok(self):
+    def test_then_header_starts_with_not_ok(self):
         name, prefix = util.rand_string(2)
-        expected = actual = prefix + util.rand_string()
+        actual = prefix + util.rand_string()
         self.ctx.zato.response.data.headers[name] = actual
         self.assertRaises(AssertionError, common.then_header_starts_with, self.ctx, name, util.rand_string())
 
     def test_then_header_doesnt_starts_with_ok(self):
         name, prefix = util.rand_string(2)
-        expected = actual = prefix + util.rand_string()
+        actual = prefix + util.rand_string()
         self.ctx.zato.response.data.headers[name] = actual
         self.assertTrue(common.then_header_doesnt_starts_with(self.ctx, name, util.rand_string()))

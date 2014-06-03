@@ -20,13 +20,13 @@ from zato.apitest.util import context, new_context, rand_string
 
 class UtilTest(TestCase):
 
-    def _test_new_context(self, ctx, environment_dir):
-        self.assertEquals(ctx.zato.environment_dir, environment_dir)
-        self.assertDictEqual(ctx.zato.user_data, {})
-        self.assertDictEqual(ctx.zato.date_formats, {'default':'YYYY-MM-DDTHH:mm:ss'})
-        self.assertDictEqual(ctx.zato.request.headers, {'User-Agent':'zato.apitest/{} (+https://zato.io)'.format(version)})
-        self.assertDictEqual(ctx.zato.request.ns_map, {})
-        self.assertDictEqual(ctx, context)
+    def _test_new_context(self, ctx_zato, environment_dir):
+        self.assertEquals(ctx_zato.environment_dir, environment_dir)
+        self.assertDictEqual(ctx_zato.user_data, {})
+        self.assertDictEqual(ctx_zato.date_formats, {'default':'YYYY-MM-DDTHH:mm:ss'})
+        self.assertDictEqual(ctx_zato.request.headers, {'User-Agent':'zato.apitest/{} (+https://zato.io)'.format(version)})
+        self.assertDictEqual(ctx_zato.request.ns_map, {})
+        self.assertDictEqual(context, {})
 
     def test_new_context_from_old_ctx(self):
 
