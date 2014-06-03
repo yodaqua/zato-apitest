@@ -33,15 +33,6 @@ from requests import api as req_api
 from .. import util
 from .. import INVALID, NO_VALUE
 
-# TODO TODO
-
-# TODO TODO
-
-# And user agent is
-
-# TODO TODO
-
-
 # ################################################################################################################################
 
 @when('the URL is invoked')
