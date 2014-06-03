@@ -8,6 +8,4 @@ Tests are written in plain English, with no programming needed, and can be trivi
 
 Here's how a built-in demo test case looks like:
 
-<center>
-[[(../docs/gfx/demo.png)]]
-</center>
+[[/docs/gfx/demo.png|align=center]]
