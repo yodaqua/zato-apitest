@@ -9,7 +9,7 @@ Licensed under LGPLv3, see LICENSE.txt for terms and conditions.
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 # stdlib
-import json, uuid
+import json
 
 # Behave
 from behave import given, when, then
@@ -18,7 +18,7 @@ from behave import given, when, then
 from bunch import Bunch
 
 # datadiff
-from datadiff.tools import assert_equal
+from datadiff.tools import assert_equals
 
 # jsonpointer
 from jsonpointer import resolve_pointer as get_pointer
@@ -31,6 +31,7 @@ from requests import api as req_api
 
 # Zato
 from .. import util
+from .. import INVALID, NO_VALUE
 
 # TODO TODO
 
@@ -40,8 +41,6 @@ from .. import util
 
 # TODO TODO
 
-INVALID = 'invalid-{}'.format(uuid.uuid4().hex)
-NO_VALUE = 'no-value-{}'.format(uuid.uuid4().hex)
 
 # ################################################################################################################################
 
@@ -255,7 +254,7 @@ def needs_json(func):
     return inner
 
 def json_response_is_equal_to(ctx, expected):
-    assert_equal(expected, ctx.zato.response.data_impl)
+    assert_equals(expected, ctx.zato.response.data_impl)
     return True
 
 @then('response is equal to "{expected}"')

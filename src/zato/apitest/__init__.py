@@ -8,7 +8,13 @@ Licensed under LGPLv3, see LICENSE.txt for terms and conditions.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+# stdlib
+from uuid import uuid4
+
 # setuptools
 from pkg_resources import get_distribution
 
 version = get_distribution('zato.apitest').version
+
+INVALID = 'invalid-{}'.format(uuid4().hex)
+NO_VALUE = 'no-value-{}'.format(uuid4().hex)

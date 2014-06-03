@@ -11,11 +11,15 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 # Behave
 from behave import given, then
 
-# JSON Pointers
-from jsonpointer import set_pointer
+# datadiff
+from datadiff.tools import assert_equals
+
+# jsonpointer
+from jsonpointer import resolve_pointer as get_pointer, set_pointer
 
 # Zato
 from .. import util
+from .. import INVALID
 
 # ################################################################################################################################
 
@@ -43,40 +47,52 @@ def given_json_pointer_in_request_is_a_random_string(ctx, path):
 def given_json_pointer_in_request_is_a_random_integer(ctx, path):
     set_pointer(ctx.zato.request.data_impl, path, util.rand_int())
 
-@given('JSON Pointer "{path}" in request is any of "{value}"')
-def given_json_pointer_in_request_is_any_of(ctx, path, value):
+@given('JSON Pointer "{path}" in request is one of "{value}"')
+def given_json_pointer_in_request_is_one_of(ctx, path, value):
     set_pointer(ctx.zato.request.data_impl, path, util.any_from_list(value))
 
 # ################################################################################################################################
 
+def assert_value(ctx, path, value, wrapper=None):
+    value = wrapper(value) if wrapper else value
+    actual = get_pointer(ctx.zato.response.data_impl, path)
+    assert_equals(value, actual)
+    return True
+
 @then('JSON Pointer "{path}" is "{value}"')
 def then_json_pointer_is(ctx, path, value):
-    pass
+    return
+    return assert_value(ctx, path, value)
 
 @then('JSON Pointer "{path}" is an integer "{value}"')
 def then_json_pointer_is_an_integer(ctx, path, value):
-    pass
+    return assert_value(ctx, path, value, int)
 
 @then('JSON Pointer "{path}" is a float "{value}"')
 def then_json_pointer_is_a_float(ctx, path, value):
-    pass
+    return assert_value(ctx, path, value, float)
 
 @then('JSON Pointer "{path}" is a list "{value}"')
 def then_json_pointer_is_a_list(ctx, path, value):
-    pass
+    return assert_value(ctx, path, value, util.parse_list)
 
 @then('JSON Pointer "{path}" is empty')
-def then_json_pointer_is_empty(ctx, path, value):
-    pass
+def then_json_pointer_is_empty(ctx, path):
+    return assert_value(ctx, path, '')
 
-@then('JSON Pointer "{path}" is not empty')
-def then_json_pointer_is_not_empty(ctx, path, value):
-    pass
+@then('JSON Pointer "{path}" isn\'t empty')
+def then_json_pointer_isnt_empty(ctx, path):
+    actual = get_pointer(ctx.zato.response.data_impl, path, INVALID)
+    assert actual != INVALID, 'Path `{}` Should not be empty'.format(path)
 
 @then('JSON Pointer "{path}" is one of "{value}"')
 def then_json_pointer_is_one_of(ctx, path, value):
-    pass
+    actual = get_pointer(ctx.zato.response.data_impl, path)
+    value = util.parse_list(value)
+    assert actual in value, 'Expected for `{}` ({}) to be in `{}`'.format(actual, path, value)
 
-@then('JSON Pointer "{path}" is not one of "{value}"')
-def then_json_pointer_is_not_one_of(ctx, path, value):
-    pass
+@then('JSON Pointer "{path}" isn\'t one of "{value}"')
+def then_json_pointer_isnt_one_of(ctx, path, value):
+    actual = get_pointer(ctx.zato.response.data_impl, path)
+    value = util.parse_list(value)
+    assert actual not in value, 'Expected for `{}` ({}) not to be in `{}`'.format(actual, path, value)
