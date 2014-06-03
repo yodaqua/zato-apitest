@@ -18,6 +18,9 @@ from bunch import Bunch
 # lxml
 from lxml import etree
 
+# mock
+from mock import patch
+
 # Zato
 from zato.apitest import util
 from zato.apitest.steps import common
@@ -126,3 +129,126 @@ class GivenTestCase(TestCase):
         value = util.rand_string()
         common.given_soap_action(self.ctx, value)
         self.assertEquals(self.ctx.zato.request.headers['SOAPAction'], value)
+
+    def test_given_request_impl_xml(self):
+        value = util.rand_string()
+        data = '<abc>{}</abc>'.format(value)
+        self.ctx.zato.request.format = 'XML'
+        common.given_request_impl(self.ctx, data)
+
+        self.assertEquals(self.ctx.zato.request.is_xml, True)
+        self.assertEquals(self.ctx.zato.request.is_json, False)
+        self.assertEquals(self.ctx.zato.request.data_impl.xpath('/abc')[0].text, value)
+
+    def test_given_request_impl_json(self):
+        value = util.rand_string()
+        data = '{"abc":"%s"}' % value
+        self.ctx.zato.request.format = 'JSON'
+        common.given_request_impl(self.ctx, data)
+
+        self.assertEquals(self.ctx.zato.request.is_xml, False)
+        self.assertEquals(self.ctx.zato.request.is_json, True)
+        self.assertEquals(self.ctx.zato.request.data_impl['abc'], value)
+
+    def test_given_request_xml_no_data(self):
+
+        class _RequestPath(object):
+            def __init__(self):
+                self.value = util.rand_string()
+
+            def __nonzero__(self):
+                return False
+
+        _base_dir = util.rand_string()
+        _format = 'XML'
+        _request_path = _RequestPath()
+
+        def get_full_path(base_dir, format, req_or_resp, request_path):
+            self.assertEquals(base_dir, _base_dir)
+            self.assertEquals(format, _format.lower())
+            self.assertEquals(req_or_resp, 'request')
+            self.assertEquals(request_path.value, _request_path.value)
+
+        def get_file(*ignored_args, **ignored_kwargs):
+            pass
+
+        with patch('zato.apitest.util.get_full_path', get_full_path):
+            with patch('zato.apitest.util.get_file', get_file):
+                self.ctx.zato.request.format = 'XML'
+                self.ctx.zato.environment_dir = _base_dir
+
+                self.assertRaises(ValueError, common.given_request, self.ctx, _request_path)
+
+    def test_given_request_xml(self):
+        value = util.rand_string()
+
+        _base_dir = util.rand_string()
+        _format = 'XML'
+        _request_path = util.rand_string()
+
+        def get_full_path(base_dir, format, req_or_resp, request_path):
+            self.assertEquals(base_dir, _base_dir)
+            self.assertEquals(format, _format.lower())
+            self.assertEquals(req_or_resp, 'request')
+            self.assertEquals(request_path, _request_path)
+
+        def get_file(*ignored_args, **ignored_kwargs):
+            return '<abc>{}</abc>'.format(value)
+
+        with patch('zato.apitest.util.get_full_path', get_full_path):
+            with patch('zato.apitest.util.get_file', get_file):
+                self.ctx.zato.request.format = _format
+                self.ctx.zato.environment_dir = _base_dir
+
+                common.given_request(self.ctx, _request_path)
+
+                self.assertEquals(self.ctx.zato.request.is_xml, True)
+                self.assertEquals(self.ctx.zato.request.is_json, False)
+                self.assertEquals(self.ctx.zato.request.data_impl.xpath('/abc')[0].text, value)
+
+    def test_given_request_json(self):
+        value = util.rand_string()
+
+        _base_dir = util.rand_string()
+        _format = 'JSON'
+        _request_path = util.rand_string()
+
+        def get_full_path(base_dir, format, req_or_resp, request_path):
+            self.assertEquals(base_dir, _base_dir)
+            self.assertEquals(format, _format.lower())
+            self.assertEquals(req_or_resp, 'request')
+            self.assertEquals(request_path, _request_path)
+
+        def get_file(*ignored_args, **ignored_kwargs):
+            return '{"abc":"%s"}' % value
+
+        with patch('zato.apitest.util.get_full_path', get_full_path):
+            with patch('zato.apitest.util.get_file', get_file):
+                self.ctx.zato.request.format = _format
+                self.ctx.zato.environment_dir = _base_dir
+
+                common.given_request(self.ctx, _request_path)
+
+                self.assertEquals(self.ctx.zato.request.is_xml, False)
+                self.assertEquals(self.ctx.zato.request.is_json, True)
+                self.assertEquals(self.ctx.zato.request.data_impl['abc'], value)
+
+    def test_given_request_is(self):
+        _ctx, _data = util.rand_string(2)
+
+        def given_request_impl(ctx, data):
+            self.assertEquals(ctx, _ctx)
+            self.assertEquals(data, _data)
+
+        with patch('zato.apitest.steps.common.given_request_impl', given_request_impl):
+            common.given_request_is(_ctx, _data)
+
+    def test_given_query_string(self):
+        value = util.rand_string()
+        common.given_query_string(self.ctx, value)
+        self.assertEquals(self.ctx.zato.request.query_string, value)
+
+    def test_given_i_store_value_under_name(self):
+        value, name = util.rand_string(2)
+        common.given_i_store_value_under_name(self.ctx, value, name)
+        self.assertEquals(self.ctx.zato.user_data[name], value)

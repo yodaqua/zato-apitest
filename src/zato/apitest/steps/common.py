@@ -134,7 +134,7 @@ def given_date_format(ctx, name, format):
 # ################################################################################################################################
 
 @given('I store "{value}" under "{name}"')
-def i_store_name_under_key(ctx, value, name):
+def given_i_store_value_under_name(ctx, value, name):
     ctx.zato.user_data[name] = value
 
 # ################################################################################################################################
