@@ -23,7 +23,7 @@ from zato.apitest import util
 from zato.apitest.steps import common
 from zato.apitest.test import JSONEchoAdapter, xml_c14nize, XMLEchoAdapter
 
-class CommonTestCase(TestCase):
+class WhenTestCase(TestCase):
     def test_when_the_url_is_invoked_xml(self):
 
         data = '<a><b>cc</b></a>'
@@ -86,3 +86,43 @@ class CommonTestCase(TestCase):
 
         # Confirms the body we sent was received.
         self.assertDictEqual(loads(sent_request['request']['data']), data)
+
+class GivenTestCase(TestCase):
+
+    def setUp(self):
+        self.ctx = util.new_context(None, util.rand_string())
+
+    def test_given_address(self):
+        value = util.rand_string()
+        common.given_address(self.ctx, value)
+        self.assertEquals(self.ctx.zato.request.address, value)
+
+    def test_given_url_path(self):
+        value = util.rand_string()
+        common.given_url_path(self.ctx, value)
+        self.assertEquals(self.ctx.zato.request.url_path, value)
+
+    def test_given_http_method(self):
+        value = util.rand_string()
+        common.given_http_method(self.ctx, value)
+        self.assertEquals(self.ctx.zato.request.method, value)
+
+    def test_given_format(self):
+        value = util.rand_string()
+        common.given_format(self.ctx, value)
+        self.assertEquals(self.ctx.zato.request.format, value)
+
+    def test_given_user_agent_is(self):
+        value = util.rand_string()
+        common.given_user_agent_is(self.ctx, value)
+        self.assertEquals(self.ctx.zato.request.headers['User-Agent'], value)
+
+    def test_given_header(self):
+        header, value = util.rand_string(2)
+        common.given_header(self.ctx, header, value)
+        self.assertEquals(self.ctx.zato.request.headers[header], value)
+
+    def test_given_soap_action(self):
+        value = util.rand_string()
+        common.given_soap_action(self.ctx, value)
+        self.assertEquals(self.ctx.zato.request.headers['SOAPAction'], value)
