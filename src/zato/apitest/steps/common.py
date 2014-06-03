@@ -17,6 +17,12 @@ from behave import given, when, then
 # Bunch
 from bunch import Bunch
 
+# datadiff
+from datadiff.tools import assert_equal
+
+# jsonpointer
+from jsonpointer import resolve_pointer as get_pointer
+
 # lxml
 from lxml import etree
 
@@ -35,6 +41,7 @@ from .. import util
 # TODO TODO
 
 INVALID = 'invalid-{}'.format(uuid.uuid4().hex)
+NO_VALUE = 'no-value-{}'.format(uuid.uuid4().hex)
 
 # ################################################################################################################################
 
@@ -111,13 +118,7 @@ def given_request_impl(ctx, data):
 
 @given('request "{request_path}"')
 def given_request(ctx, request_path):
-    full_path = util.get_full_path(ctx.zato.environment_dir, ctx.zato.request.format.lower(), 'request', request_path)
-    data = util.get_file(full_path) if request_path else ''
-
-    if ctx.zato.request.format == 'XML' and not data:
-        raise ValueError('No request in `{}`'.format(full_path))
-
-    return given_request_impl(ctx, data)
+    return given_request_impl(ctx, util.get_data(ctx, 'request', request_path))
 
 @given('request is "{data}"')
 def given_request_is(ctx, data):
@@ -230,22 +231,39 @@ def then_header_doesnt_end_with(ctx, expected_header, expected_value):
         expected_header, expected_value, value)
     return True
 
-@then('header "{expected_header}" has "{expected_value}" at {idx_start}:{idx_end}')
-def then_header_has_at(ctx, expected_header, expected_value, idx_start, idx_end):
-    pass
+# ################################################################################################################################
+
+@then('I store "{path}" from response under "{name}", default "{default}"')
+def then_store_path_under_name_with_default(ctx, path, name, default):
+    if ctx.zato.request.is_xml:
+        value = 1
+    else:
+        value = get_pointer(ctx.zato.response.data_impl, path)
+        ctx.zato.user_data[name] = value
+
+@then('I store "{path}" from response under "{name}"')
+def then_store_path_under_name(ctx, path, name):
+    return then_store_path_under_name_with_default(ctx, path, name, NO_VALUE)
 
 # ################################################################################################################################
 
-@then('store "{path}" under "{name}"')
-def then_store_path_under_name(ctx, response):
-    pass
+def needs_json(func):
+    def inner(ctx, **kwargs):
+        if not ctx.zato.request.format == 'JSON':
+            raise TypeError('This step works with JSON only.')
+        return func(ctx, **kwargs)
+    return inner
 
-# ################################################################################################################################
+def json_response_is_equal_to(ctx, expected):
+    assert_equal(expected, ctx.zato.response.data_impl)
+    return True
 
-@then('response is equal to "{response}"')
-def then_response_is_equal_to(ctx, response):
-    pass
+@then('response is equal to "{expected}"')
+@needs_json
+def then_response_is_equal_to(ctx, expected):
+    return json_response_is_equal_to(ctx, json.loads(expected))
 
 @then('response is equal to that from "{path}"')
+@needs_json
 def then_response_is_equal_to_that_from(ctx, path):
-    pass
+    return json_response_is_equal_to(ctx, util.get_data(ctx, 'response', path))
