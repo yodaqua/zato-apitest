@@ -8,4 +8,4 @@ Tests are written in plain English, with no programming needed, and can be trivi
 
 Here's how a built-in demo test case looks like:
 
-![zato.apitest demo run](../docs/gfx/demo.png)
+![zato.apitest demo run](https://raw.githubusercontent.com/zatosource/zato-apitest/master/docs/gfx/demo.png)
