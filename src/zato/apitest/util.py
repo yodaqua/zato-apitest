@@ -70,8 +70,11 @@ def rand_string(count=1):
     else:
         return ['a' + uuid.uuid4().hex for x in range(count)]
 
-def rand_int(min=0, max=100):
-    return random.choice(range(min, max))
+def rand_int(min=0, max=100, count=1):
+    if count == 1:
+        return random.choice(range(min, max))
+    else:
+        return [random.choice(range(min, max)) for x in range(count)]
 
 def rand_float(min, max):
     return float(rand_int(min, max)) + random.random()

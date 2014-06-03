@@ -148,74 +148,87 @@ def then_status_is(ctx, expected_status):
     expected_status = int(expected_status)
     assert ctx.zato.response.data.status_code == expected_status, 'Status expected `{!r}`, received `{!r}`'.format(
         expected_status, ctx.zato.response.data.status_code)
+    return True
 
 @then('header "{expected_header}" is "{expected_value}"')
 def then_header_is(ctx, expected_header, expected_value):
     value = ctx.zato.response.data.headers[expected_header]
     assert value == expected_value, 'Expected for header `{}` to be `{}` instead of `{}`'.format(
         expected_header, expected_value, value)
+    return True
 
 @then('header "{expected_header}" isn\'t "{expected_value}"')
 def then_header_isnt(ctx, expected_header, expected_value):
     value = ctx.zato.response.data.headers[expected_header]
     assert expected_value != value, 'Expected for header `{}` not to be equal to `{}`'.format(
         expected_header, expected_value)
+    return True
 
 @then('header "{expected_header}" contains "{expected_value}"')
 def then_header_contains(ctx, expected_header, expected_value):
     value = ctx.zato.response.data.headers[expected_header]
     assert expected_value in value, 'Expected for header `{}` to contain `{}` in `{}`'.format(
         expected_header, expected_value, value)
+    return True
 
 @then('header "{expected_header}" doesn\'t contain "{expected_value}"')
 def then_header_doesnt_contain(ctx, expected_header, expected_value):
     value = ctx.zato.response.data.headers[expected_header]
     assert expected_value not in value, 'Header `{}` shouldn\'t contain `{}` in `{}`'.format(
         expected_header, expected_value, value)
+    return True
 
 @then('header "{expected_header}" exists')
 def then_header_exists(ctx, expected_header):
     value = ctx.zato.response.data.headers.get(expected_header, INVALID)
-    assert value != INVALID, 'Header `{}` should be among `{}`'.format(expected_header, ctx.zato.response.headers)
+    assert value != INVALID, 'Header `{}` should be among `{}`'.format(expected_header, ctx.zato.response.data.headers)
+    return True
 
 @then('header "{expected_header}" doesn\'t exist')
 def then_header_doesnt_exist(ctx, expected_header):
     value = ctx.zato.response.data.headers.get(expected_header, INVALID)
-    assert value == INVALID, 'Header `{}` shouldn\'t be among `{}`'.format(expected_header, ctx.zato.response.headers)
+    assert value == INVALID, 'Header `{}` shouldn\'t be among `{}`'.format(expected_header, ctx.zato.response.data.headers)
+    return True
 
 @then('header "{expected_header}" is empty')
 def then_header_is_empty(ctx, expected_header):
     value = ctx.zato.response.data.headers[expected_header]
     assert value == '', 'Header `{}` should be empty instead of `{}`'.format(expected_header, value)
+    return True
 
 @then('header "{expected_header}" isn\'t empty')
 def then_header_isnt_empty(ctx, expected_header):
     value = ctx.zato.response.data.headers[expected_header]
     assert value != '', 'Header `{}` shouldn\'t be empty'.format(expected_header)
+    return True
 
 @then('header "{expected_header}" starts with')
 def then_header_starts_with(ctx, expected_header, expected_value):
     value = ctx.zato.response.data.headers[expected_header]
     assert value.startswith(expected_value), 'Expected for header `{}` to start with `{}` but it\'s `{}`'.format(
         expected_header, expected_value, value)
+    return True
 
 @then('header "{expected_header}" doesn\'t start with')
 def then_header_doesnt_starts_with(ctx, expected_header, expected_value):
     value = ctx.zato.response.data.headers[expected_header]
     assert not value.startswith(expected_value), 'Expected for header `{}` not to start with `{}` yet it\'s `{}`'.format(
         expected_header, expected_value, value)
+    return True
 
 @then('header "{expected_header}" ends with')
 def then_header_ends_with(ctx, expected_header, expected_value):
     value = ctx.zato.response.data.headers[expected_header]
     assert value.endswith(expected_value), 'Expected for header `{}` to end with `{}` but it\'s `{}`'.format(
         expected_header, expected_value, value)
+    return True
 
 @then('header "{expected_header}" doesn\'t end with')
 def then_header_doesnt_end_with(ctx, expected_header, expected_value):
     value = ctx.zato.response.data.headers[expected_header]
     assert not value.endswith(expected_value), 'Expected for header `{}` not to end with `{}` yet it\'s `{}`'.format(
         expected_header, expected_value, value)
+    return True
 
 @then('header "{expected_header}" has "{expected_value}" at {idx_start}:{idx_end}')
 def then_header_has_at(ctx, expected_header, expected_value, idx_start, idx_end):
