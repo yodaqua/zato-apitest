@@ -34,13 +34,16 @@ random.seed()
 context = Bunch()
 
 def new_context(old_ctx, environment_dir):
-    context = Bunch()
-    context.user_data = {}
-    context.date_formats = {'default':'YYYY-MM-DDTHH:mm:ss'}
-    context.environment_dir = old_ctx.zato.environment_dir if old_ctx else environment_dir
-    context.request = Bunch()
-    context.request.headers = {'User-Agent':'zato.apitest/{} (+https://zato.io)'.format(version)}
-    context.request.ns_map = {}
+    _context = Bunch()
+    _context.user_data = {}
+    _context.date_formats = {'default':'YYYY-MM-DDTHH:mm:ss'}
+    _context.environment_dir = old_ctx.zato.environment_dir if old_ctx else environment_dir
+    _context.request = Bunch()
+    _context.request.headers = {'User-Agent':'zato.apitest/{} (+https://zato.io)'.format(version)}
+    _context.request.ns_map = {}
+
+    context.clear()
+    context.update(_context)
 
     return context
 

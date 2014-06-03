@@ -26,7 +26,7 @@ class UtilTest(TestCase):
         self.assertDictEqual(ctx_zato.date_formats, {'default':'YYYY-MM-DDTHH:mm:ss'})
         self.assertDictEqual(ctx_zato.request.headers, {'User-Agent':'zato.apitest/{} (+https://zato.io)'.format(version)})
         self.assertDictEqual(ctx_zato.request.ns_map, {})
-        self.assertDictEqual(context, {})
+        self.assertDictEqual(context, ctx_zato)
 
     def test_new_context_from_old_ctx(self):
 
