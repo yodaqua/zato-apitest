@@ -55,7 +55,7 @@ def when_the_url_is_invoked(ctx, adapters=None):
     if ctx.zato.request.is_xml:
         data = etree.tostring(ctx.zato.request.data_impl)
     elif ctx.zato.request.is_json:
-        data = json.dumps(ctx.zato.request.data, indent=2)
+        data = json.dumps(ctx.zato.request.data_impl, indent=2)
 
     ctx.zato.response = Bunch()
 

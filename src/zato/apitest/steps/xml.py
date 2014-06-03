@@ -66,32 +66,32 @@ def given_xpath_set_to_rand_float(ctx, elem, **ignored):
 
 @given('XPath "{xpath}" in request is a random date "{format}"')
 @handle_xpath(True)
-def given_xpath_set_to_rand_date(ctx, elem, format, **ignored):
+def given_xpath_is_rand_date(ctx, elem, format, **ignored):
     elem.text = util.rand_date(ctx.zato.date_formats[format])
 
 @given('XPath "{xpath}" in request is now "{format}"')
 @handle_xpath(True)
-def given_xpath_set_to_now(ctx, elem, format, **ignored):
+def given_xpath_is_now(ctx, elem, format, **ignored):
     elem.text = util.now(format=ctx.zato.date_formats[format])
 
 @given('XPath "{xpath}" in request is UTC now "{format}"')
 @handle_xpath(True)
-def given_xpath_set_to_utc_now(ctx, elem, format, **ignored):
+def given_xpath_is_utc_now(ctx, elem, format, **ignored):
     elem.text = util.utcnow(format=ctx.zato.date_formats[format])
 
 @given('XPath "{xpath}" in request is a random date after "{date_start}" "{format}"')
 @handle_xpath(True)
-def given_xpath_set_to_rand_date_after(ctx, elem, date_start, format, **ignored):
+def given_xpath_is_rand_date_after(ctx, elem, date_start, format, **ignored):
     elem.text = util.date_after(date_start, ctx.zato.date_formats[format])
 
 @given('XPath "{xpath}" in request is a random date before "{date_end}" "{format}"')
 @handle_xpath(True)
-def given_xpath_set_to_rand_date_before(ctx, elem, date_end, format, **ignored):
+def given_xpath_is_rand_date_before(ctx, elem, date_end, format, **ignored):
     elem.text = util.date_before(date_end, ctx.zato.date_formats[format])
 
 @given('XPath "{xpath}" in request is a random date between "{date_start}" and "{date_end}" "{format}"')
 @handle_xpath(True)
-def given_xpath_set_to_rand_date_between(ctx, elem, date_start, date_end, format, **ignored):
+def given_xpath_is_rand_date_between(ctx, elem, date_start, date_end, format, **ignored):
     elem.text = util.date_between(date_start, date_end, ctx.zato.date_formats[format])
 
 # ################################################################################################################################
@@ -131,12 +131,12 @@ def then_xpath_is_an_integer(ctx, elem, **kwargs):
 @then('XPath "{elem}" is a float "{value}"')
 @handle_xpath(False)
 def then_xpath_is_a_float(ctx, elem, value, **kwargs):
-    pass
+    return _assert_xpath_value(ctx, elem, force_type=float, **kwargs)
 
 @then('XPath "{elem}" is empty')
 @handle_xpath(False)
 def then_xpath_is_empty(ctx, elem, **kwargs):
-    pass
+    return _assert_xpath_value(ctx, elem, value='')
 
 @then('XPath "{elem}" is not empty')
 @handle_xpath(False)

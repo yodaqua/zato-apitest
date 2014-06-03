@@ -61,7 +61,7 @@ class WhenTestCase(TestCase):
 
     def test_when_the_url_is_invoked_json(self):
 
-        data = {'a': {'b': 'cc'}}
+        data_impl = {'a': {'b': 'cc'}}
 
         method = 'POST'
         address = 'http://{}.example.com'.format(util.rand_string())
@@ -73,7 +73,7 @@ class WhenTestCase(TestCase):
 
         ctx.zato.request.is_xml = False
         ctx.zato.request.is_json = True
-        ctx.zato.request.data = data
+        ctx.zato.request.data_impl = data_impl
         ctx.zato.request.method = method
         ctx.zato.request.address = address
         ctx.zato.request.url_path = url_path
@@ -88,7 +88,7 @@ class WhenTestCase(TestCase):
             self.assertEquals(sent_request['request']['headers'][key], value)
 
         # Confirms the body we sent was received.
-        self.assertDictEqual(loads(sent_request['request']['data']), data)
+        self.assertDictEqual(loads(sent_request['request']['data']), data_impl)
 
 class GivenTestCase(TestCase):
 

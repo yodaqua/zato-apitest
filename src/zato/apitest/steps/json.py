@@ -53,6 +53,32 @@ def given_json_pointer_in_request_is_one_of(ctx, path, value):
 
 # ################################################################################################################################
 
+@given('JSON Pointer "{path}" in request is a random date "{format}"')
+def given_json_pointer_is_rand_date(ctx, path, format):
+    set_pointer(ctx.zato.request.data_impl, path, util.rand_date(ctx.zato.date_formats[format]))
+
+@given('JSON Pointer "{path}" in request is now "{format}"')
+def given_json_pointer_is_now(ctx, path, format):
+    set_pointer(ctx.zato.request.data_impl, path, util.now(format=ctx.zato.date_formats[format]))
+
+@given('JSON Pointer "{path}" in request is UTC now "{format}"')
+def given_json_pointer_is_utc_now(ctx, path, format):
+    set_pointer(ctx.zato.request.data_impl, path, util.utcnow(format=ctx.zato.date_formats[format]))
+
+@given('JSON Pointer "{path}" in request is a random date after "{date_start}" "{format}"')
+def given_json_pointer_is_rand_date_after(ctx, path, date_start, format):
+    set_pointer(ctx.zato.request.data_impl, path, util.date_after(date_start, ctx.zato.date_formats[format]))
+
+@given('JSON Pointer "{path}" in request is a random date before "{date_end}" "{format}"')
+def given_json_pointer_is_rand_date_before(ctx, path, date_end, format):
+    set_pointer(ctx.zato.request.data_impl, path, util.date_before(date_end, ctx.zato.date_formats[format]))
+
+@given('JSON Pointer "{path}" in request is a random date between "{date_start}" and "{date_end}" "{format}"')
+def given_json_pointer_is_rand_date_between(ctx, path, date_start, date_end, format):
+    set_pointer(ctx.zato.request.data_impl, path, util.date_between(date_start, date_end, ctx.zato.date_formats[format]))
+
+# ################################################################################################################################
+
 def assert_value(ctx, path, value, wrapper=None):
     value = wrapper(value) if wrapper else value
     actual = get_pointer(ctx.zato.response.data_impl, path)
@@ -61,7 +87,6 @@ def assert_value(ctx, path, value, wrapper=None):
 
 @then('JSON Pointer "{path}" is "{value}"')
 def then_json_pointer_is(ctx, path, value):
-    return
     return assert_value(ctx, path, value)
 
 @then('JSON Pointer "{path}" is an integer "{value}"')
