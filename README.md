@@ -56,7 +56,7 @@ Workflow
 1. Install zato.apitest
 2. Initialize a test environment by running ```apitest init /path/to/an/empty/directory```
 3. Update tests
-4. Run ```apitest run /path/to/tests/directory``` when you are done with updates
+4. Execute ```apitest run /path/to/tests/directory``` when you are done with updates
 5. Jump to 3.
 
 Anatomy of a test
