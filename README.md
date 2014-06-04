@@ -189,19 +189,19 @@ Scenario: REST customer update
 Available steps
 ---------------
 
-Part  | Section | Pattern                                   | Notes                                                                                                                                                           | Details
-------|---------|-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------
-Given | HTTP    | ```address "{address}"```                 | An address of the API to invoke                                                         | [Details] ()
-Given | HTTP    | ```URL path "{url_path}"```               | URL path to invoke
-Given | HTTP    | ```HTTP method "{method}"```              | HTTP method to use for invoking
-Given | HTTP    | ```format "{format}"```                   | Either 'JSON' or 'XML'
-Given | HTTP    | ```user agent is "{value}"```             | User-Agent string to use
-Given | HTTP    | ```header "{header}" "{value}"```         | Arbitrary HTTP header to provide to the API
-Given | HTTP    | ```request "{request_path}"```            | Name of a file the request is kept in.Depending on format, either ```./features/json/request``` or ```./features/xml/request``` will be prepended automatically.
-Given | HTTP    | ```request is "{data}"```                 | Request to use, inlined.
-Given | HTTP    | ```query string "{query_string}"```       | Query string parameters in format of ?a=1&b=2, including the question mark
-Given | Common  | ```date format "{name}" "{format}"```     | Stores a date format ```format``` under a label ```name``` for use in later assertions
-Given | Common  | ```I store "{value}" under "{name}"```    | Stores an arbitrary ```value``` under a ```name``` for use in later assertions
+Section | Part    | Pattern                                   | Notes                                                                                                                                                           | Details
+--------|---------|-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------
+HTTP    | Given   | ```address "{address}"```                 | An address of the API to invoke                                                         | [Details] ()
+HTTP    | Given   | ```URL path "{url_path}"```               | URL path to invoke
+HTTP    | Given   | ```HTTP method "{method}"```              | HTTP method to use for invoking
+HTTP    | Given   | ```format "{format}"```                   | Either 'JSON' or 'XML'
+HTTP    | Given   | ```user agent is "{value}"```             | User-Agent string to use
+HTTP    | Given   | ```header "{header}" "{value}"```         | Arbitrary HTTP header to provide to the API
+HTTP    | Given   | ```request "{request_path}"```            | Name of a file the request is kept in.Depending on format, either ```./features/json/request``` or ```./features/xml/request``` will be prepended automatically.
+HTTP    | Given   | ```request is "{data}"```                 | Request to use, inlined.
+HTTP    | Given   | ```query string "{query_string}"```       | Query string parameters in format of ?a=1&b=2, including the question mark
+Common  | Given   | ```date format "{name}" "{format}"```     | Stores a date format ```format``` under a label ```name``` for use in later assertions
+Common  | Given   | ```I store "{value}" under "{name}"```    | Stores an arbitrary ```value``` under a ```name``` for use in later assertions
 
 
 
