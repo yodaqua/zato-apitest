@@ -9,6 +9,14 @@ hassle as possible.
 
 Tests are written in plain English, with no programming needed, and can be trivially extended in Python if need be.
 
+Note that zato-apitest is meant to test APIs only. It's doesn't simulate a browser nor any sort of user interactions. It's meant
+purely for machine-machine API testing.
+
+Originally part of [Zato] (https://zato.io/docs/) - open-source ESB, SOA, REST, APIs and cloud integrations in Python.
+
+In addition to HTTP Zato itself supports AMQP, ZeroMQ, WebSphere MQ, including JMS, Redis, FTP, OpenERP, SMTP, IMAP, SQL, Amazon S3,
+OpenStack Swift and more so it's guaranteed zato-apitest will grow support for more protocols and transport layers with time.
+
 Here's how a built-in demo test case looks like:
 
 ![zato-apitest demo run](https://raw.githubusercontent.com/zatosource/zato-apitest/master/docs/gfx/demo.png)
