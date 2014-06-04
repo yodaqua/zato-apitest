@@ -16,6 +16,28 @@ Here's how a built-in demo test case looks like:
 What it can do
 --------------
 
+- Invoke HTTP APIs
+
+- Use [JSON Pointers] (https://zato.io/blog/posts/json-pointer-rfc-6901.html) or [XPath] (https://en.wikipedia.org/wiki/XPath)
+  to set request's elements to strings, integers, floats, lists, random ones from a set of values, random strings, dates now/random/before/after/between.
+  
+- Check that JSON and XML elements, exist, don't exist,
+  that an element is an integer, float, list, empty, non-empty, that it belongs to a list or doesn't.
+
+- Set custom HTTP headers, user agent strings, method and SOAP action.
+
+- Check that HTTP headers are or are not of expected value, that a header exists or not, contains a value or not, is empty or not,
+  starts with a value or not and ends with a value or not.
+  
+- Read configuration from environment and config files.
+
+- Store values extracted out of previous steps for use in subsequent steps, i.e. get a list of objects, pick ID of the first one
+  and use this ID in later steps.
+  
+- Be integrated with JUnit
+
+- Be very easily extended in Python
+
 Download and install
 --------------------
 
