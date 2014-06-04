@@ -186,8 +186,8 @@ Scenario: REST customer update
   for instance ```Given address "http://example.com"``` is an invocation of a ```Given address "{address}"``` pattern.
 
 
-Available steps
----------------
+Available steps and assertions
+------------------------------
 
 All the [default steps are listed separately] (./docs/steps/list.md). You're also encouraged to [browse the usage examples] (./docs/steps).
 
