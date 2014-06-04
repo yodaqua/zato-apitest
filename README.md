@@ -1,17 +1,17 @@
-zato.apitest - API Testing for Humans
+zato-apitest - API Testing for Humans
 =====================================
 
 Introduction
 ------------
 
-zato.apitest is a friendly command line tool for creating beautiful tests of HTTP-based REST, XML and SOAP APIs with as little
+zato-apitest is a friendly command line tool for creating beautiful tests of HTTP-based REST, XML and SOAP APIs with as little
 hassle as possible.
 
 Tests are written in plain English, with no programming needed, and can be trivially extended in Python if need be.
 
 Here's how a built-in demo test case looks like:
 
-![zato.apitest demo run](https://raw.githubusercontent.com/zatosource/zato-apitest/master/docs/gfx/demo.png)
+![zato-apitest demo run](https://raw.githubusercontent.com/zatosource/zato-apitest/master/docs/gfx/demo.png)
 
 What it can do
 --------------
@@ -41,6 +41,13 @@ What it can do
 Download and install
 --------------------
 
+Newest releases are always available [on PyPI] (https://pypi.python.org/pypi/zato-apitest)
+and can be installed with [pip] (https://pip.pypa.io/en/latest/installing.html).
+
+```bash
+$ sudo pip install zato-apitest
+```
+
 Run a demo test
 ---------------
 
@@ -53,7 +60,7 @@ by playing with an actual set of assertions.
 Workflow
 --------
 
-1. Install zato.apitest
+1. Install zato-apitest
 2. Initialize a test environment by running ```apitest init /path/to/an/empty/directory```
 3. Update tests
 4. Execute ```apitest run /path/to/tests/directory``` when you are done with updates
@@ -163,11 +170,21 @@ Scenario: REST customer update
   - One or more ```Given``` steps
   - Exactly one ```When``` step
   - One or more ```Then/And``` steps. There is no difference between how ```Then``` and ```And``` work, simply the first
-    assertion is called ```Then``` and the rest of them is ```And```. Any assertion may come first
-    
+    assertion is called ```Then``` and the rest of them is ```And```. Any assertion may come first.
+
+- In both ```Given``` and ```Then/And``` the order of steps is always honored.
+
+- Steps work by matching patterns that can be potentially parametrized between double quotation marks,
+  for instance ```Given address "http://example.com"``` is an invocation of a ```Given address "{address}"``` pattern.
+
 
 Available steps
 ---------------
+
+Part | Pattern | Section | Notes | Details
+Given | address "{address}" | Common | Establishes an address to invoke | [Details] ()
+
+
 
 Where to keep configuration
 ---------------------------
@@ -175,9 +192,9 @@ Where to keep configuration
 Linking tests to form complex scenarios
 ---------------------------------------
 
-Extending zato.apitest and adding custom assertions
+Extending zato-apitest and adding custom assertions
 ---------------------------------------------------
 
 License
 -------
-[LGPLv3] (./LICENSE.txt) - zato.apitest is free to use in open-source and proprietary programs.
+[LGPLv3] (./LICENSE.txt) - zato-apitest is free to use in open-source and proprietary programs.
