@@ -19,6 +19,12 @@ from .. import util
 
 # ################################################################################################################################
 
+@given('SOAP action "{value}"')
+def given_soap_action(ctx, value):
+    ctx.zato.request.headers['SOAPAction'] = value
+
+# ################################################################################################################################
+
 def handle_xpath(is_request):
     def handle_xpath_impl(func, **ignored):
         def inner(ctx, **kwargs):

@@ -90,10 +90,6 @@ def given_user_agent_is(ctx, value):
 def given_header(ctx, header, value):
     ctx.zato.request.headers[header] = value
 
-@given('SOAP action "{value}"')
-def given_soap_action(ctx, value):
-    ctx.zato.request.headers['SOAPAction'] = value
-
 def given_request_impl(ctx, data):
 
     ctx.zato.request.data = data
