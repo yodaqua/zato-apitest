@@ -189,19 +189,79 @@ Scenario: REST customer update
 Available steps
 ---------------
 
-Section | Part    | Pattern                                   | Notes                                                                                                                                                           | Details
---------|---------|-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------
-HTTP    | Given   | ```address "{address}"```                 | An address of the API to invoke                                                         | [Details] ()
-HTTP    | Given   | ```URL path "{url_path}"```               | URL path to invoke
-HTTP    | Given   | ```HTTP method "{method}"```              | HTTP method to use for invoking
-HTTP    | Given   | ```format "{format}"```                   | Either 'JSON' or 'XML'
-HTTP    | Given   | ```user agent is "{value}"```             | User-Agent string to use
-HTTP    | Given   | ```header "{header}" "{value}"```         | Arbitrary HTTP header to provide to the API
-HTTP    | Given   | ```request "{request_path}"```            | Name of a file the request is kept in.Depending on format, either ```./features/json/request``` or ```./features/xml/request``` will be prepended automatically.
-HTTP    | Given   | ```request is "{data}"```                 | Request to use, inlined.
-HTTP    | Given   | ```query string "{query_string}"```       | Query string parameters in format of ?a=1&b=2, including the question mark
-Common  | Given   | ```date format "{name}" "{format}"```     | Stores a date format ```format``` under a label ```name``` for use in later assertions
-Common  | Given   | ```I store "{value}" under "{name}"```    | Stores an arbitrary ```value``` under a ```name``` for use in later assertions
+Section | Part    | Pattern                                                                                                     | Notes                                                                                                                                                            | Details
+--------|---------|-------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------
+HTTP    | Given   | ```address "{address}"```                                                                                   | An address of the API to invoke                                                                                                                                  | [Details] ()
+HTTP    | Given   | ```URL path "{url_path}"```                                                                                 | URL path to invoke                                                                                                                                               |
+HTTP    | Given   | ```HTTP method "{method}"```                                                                                | HTTP method to use for invoking                                                                                                                                  |
+HTTP    | Given   | ```format "{format}"```                                                                                     | Either 'JSON' or 'XML'                                                                                                                                           |
+HTTP    | Given   | ```user agent is "{value}"```                                                                               | User-Agent string to use                                                                                                                                         |
+HTTP    | Given   | ```header "{header}" "{value}"```                                                                           | Arbitrary HTTP header to provide to the API                                                                                                                      |
+HTTP    | Given   | ```request "{request_path}"```                                                                              | Name of a file the request is kept in.Depending on format, either ```./features/json/request``` or ```./features/xml/request``` will be prepended automatically. |
+HTTP    | Given   | ```request is "{data}"```                                                                                   | Request to use, inlined.
+HTTP    | Given   | ```query string "{query_string}"```                                                                         | Query string parameters in format of ?a=1&b=2, including the question mark
+Common  | Given   | ```date format "{name}" "{format}"```                                                                       | Stores a date format ```format``` under a label ```name``` for use in later assertions
+Common  | Given   | ```I store "{value}" under "{name}"```                                                                      | Stores an arbitrary ```value``` under a ```name``` for use in later assertions
+JSON    | Given   | ```JSON Pointer "{path}" in request is "{value}"```                                                         ||
+JSON    | Given   | ```JSON Pointer "{path}" in request is an integer "{value}"```                                              ||
+JSON    | Given   | ```JSON Pointer "{path}" in request is a float "{value}"```                                                 ||
+JSON    | Given   | ```JSON Pointer "{path}" in request is a list "{value}"```                                                  ||
+JSON    | Given   | ```JSON Pointer "{path}" in request is a random string```                                                   ||
+JSON    | Given   | ```JSON Pointer "{path}" in request is a random integer```                                                  ||
+JSON    | Given   | ```JSON Pointer "{path}" in request is one of "{value}"```                                                  ||
+JSON    | Given   | ```JSON Pointer "{path}" in request is a random date "{format}"```                                          ||
+JSON    | Given   | ```JSON Pointer "{path}" in request is now "{format}"```                                                    ||
+JSON    | Given   | ```JSON Pointer "{path}" in request is UTC now "{format}"```                                                ||
+JSON    | Given   | ```JSON Pointer "{path}" in request is a random date after "{date_start}" "{format}"```                     ||
+JSON    | Given   | ```JSON Pointer "{path}" in request is a random date before "{date_end}" "{format}"```                      ||
+JSON    | Given   | ```JSON Pointer "{path}" in request is a random date between "{date_start}" and "{date_end}" "{format}"```  ||
+XML     | Given   | ```namespace prefix "{prefix}" of "{namespace}"```                                                          ||
+XML     | Given   | ```SOAP action "{value}"```                                                                                 ||
+XML     | Given   | ```XPath "{xpath}" in request is "{value}"```                                                               ||
+XML     | Given   | ```XPath "{xpath}" in request is a random string```                                                         ||
+XML     | Given   | ```XPath "{xpath}" in request is a random integer```                                                        ||
+XML     | Given   | ```XPath "{xpath}" in request is a random float```                                                          ||
+XML     | Given   | ```XPath "{xpath}" in request is a random date "{format}"```                                                ||
+XML     | Given   | ```XPath "{xpath}" in request is now "{format}"```                                                          ||
+XML     | Given   | ```XPath "{xpath}" in request is UTC now "{format}"```                                                      ||
+XML     | Given   | ```XPath "{xpath}" in request is a random date after "{date_start}" "{format}"```                           ||
+XML     | Given   | ```XPath "{xpath}" in request is a random date before "{date_end}" "{format}"```                            ||
+XML     | Given   | ```XPath "{xpath}" in request is a random date between "{date_start}" and "{date_end}" "{format}"```        ||
+XML     | Given   | ```XPath "{xpath}" in request is one of "{value}"```                                                        ||
+Common  | When    | ```the URL is invoked```                                                                                    ||
+HTTP    | Then    | ```status is "{status}"```                                                                                  ||
+HTTP    | Then    | ```header "{header}" is "{value}"```                                                                        ||
+HTTP    | Then    | ```header "{header}" isn't "{value}"```                                                                     ||
+HTTP    | Then    | ```header "{header}" contains "{value}"```                                                                  ||
+HTTP    | Then    | ```header "{header}" doesn\'t contain "{value}"```                                                          ||
+HTTP    | Then    | ```header "{header}" exists```                                                                              ||
+HTTP    | Then    | ```header "{header}" doesn't exist```                                                                       ||
+HTTP    | Then    | ```header "{header}" is empty```                                                                            ||
+HTTP    | Then    | ```header "{header}" isn't empty```                                                                         ||
+HTTP    | Then    | ```header "{header}" starts with```                                                                         ||
+HTTP    | Then    | ```header "{header}" doesn't start with```                                                                  ||
+HTTP    | Then    | ```header "{header}" ends with```                                                                           ||
+HTTP    | Then    | ```header "{header}" doesn\'t end with```                                                                   ||
+Common  | Then    | ```I store "{path}" from response under "{name}"```                                                         ||
+Common  | Then    | ```I store "{path}" from response under "{name}", default "{default}"```                                    ||
+Common  | Then    | ```context is cleaned up```                                                                                 ||
+JSON    | Then    | ```response is equal to that from "{path}"```                                                               ||
+JSON    | Then    | ```response is equal to "{expected}"```                                                                     ||
+JSON    | Then    | ```JSON Pointer "{path}" is "{value}"```                                                                    ||
+JSON    | Then    | ```JSON Pointer "{path}" is an integer "{value}"```                                                         ||
+JSON    | Then    | ```JSON Pointer "{path}" is a float "{value}"```                                                            ||
+JSON    | Then    | ```JSON Pointer "{path}" is a list "{value}"```                                                             ||
+JSON    | Then    | ```JSON Pointer "{path}" is empty```                                                                        ||
+JSON    | Then    | ```JSON Pointer "{path}" isn't empty```                                                                     ||
+JSON    | Then    | ```JSON Pointer "{path}" is one of "{value}"```                                                             ||
+JSON    | Then    | ```JSON Pointer "{path}" isn't one of "{value}"```                                                          ||
+XML     | Then    | ```XPath "{elem}" is "{value}"```                                                                           ||
+XML     | Then    | ```XPath "{elem}" is an integer "{value}"```                                                                ||
+XML     | Then    | ```XPath "{elem}" is a float "{value}"```                                                                   ||
+XML     | Then    | ```XPath "{elem}" is empty```                                                                               ||
+XML     | Then    | ```XPath "{elem}" is not empty```                                                                           ||
+XML     | Then    | ```XPath "{elem}" is one of "{value}"```                                                                    ||
+XML     | Then    | ```XPath "{elem}" is not one of "{value}"```                                                                ||
 
 
 Where to keep configuration

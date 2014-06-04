@@ -19,6 +19,10 @@ from .. import util
 
 # ################################################################################################################################
 
+@given('namespace prefix "{prefix}" of "{namespace}"')
+def given_namespace_prefix(ctx, prefix, namespace):
+    ctx.zato.request.ns_map[prefix] = namespace
+
 @given('SOAP action "{value}"')
 def given_soap_action(ctx, value):
     ctx.zato.request.headers['SOAPAction'] = value
@@ -111,10 +115,6 @@ def given_xpath_set_to_one_of(ctx, elem, value, **ignored):
 
 # ################################################################################################################################
 
-@given('namespace prefix "{prefix}" of "{namespace}"')
-def given_namespace_prefix(ctx, prefix, namespace):
-    ctx.zato.request.ns_map[prefix] = namespace
-
 def _assert_xpath_value(ctx, elem, force_type=None, **kwargs):
     elem_text = elem.text
     value = expected_value = kwargs['value']
@@ -146,7 +146,7 @@ def then_xpath_is_a_float(ctx, elem, value, **kwargs):
 def then_xpath_is_empty(ctx, elem, **kwargs):
     return _assert_xpath_value(ctx, elem, value='')
 
-@then('XPath "{elem}" is not empty')
+@then('XPath "{elem}" isn\'t empty')
 @handle_xpath(False)
 def then_xpath_is_not_empty(ctx, elem, **kwargs):
     pass
@@ -156,7 +156,7 @@ def then_xpath_is_not_empty(ctx, elem, **kwargs):
 def then_xpath_is_one_of(ctx, elem, value, **kwargs):
     pass
 
-@then('XPath "{elem}" is not one of "{value}"')
+@then('XPath "{elem}" isn\'t of "{value}"')
 @handle_xpath(False)
 def then_xpath_is_not_one_of(ctx, elem, value, **kwargs):
     pass
