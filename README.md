@@ -189,6 +189,8 @@ Scenario: REST customer update
 Available steps
 ---------------
 
+All the default steps are listed below. You're also encouraged to [browse the usage examples] (./docs/steps).
+
 Section | Part    | Pattern                                                                                                     | Notes                                                                                                                                                            | Details
 --------|---------|-------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------
 HTTP    | Given   | ```address "{address}"```                                                                                   | An address of the API to invoke                                                                                                                                  | [Details] ()
