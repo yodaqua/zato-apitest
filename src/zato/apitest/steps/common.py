@@ -189,28 +189,28 @@ def then_header_isnt_empty(ctx, expected_header):
     assert value != '', 'Header `{}` shouldn\'t be empty'.format(expected_header)
     return True
 
-@then('header "{expected_header}" starts with')
+@then('header "{expected_header}" starts with "{expected_value}"')
 def then_header_starts_with(ctx, expected_header, expected_value):
     value = ctx.zato.response.data.headers[expected_header]
     assert value.startswith(expected_value), 'Expected for header `{}` to start with `{}` but it\'s `{}`'.format(
         expected_header, expected_value, value)
     return True
 
-@then('header "{expected_header}" doesn\'t start with')
+@then('header "{expected_header}" doesn\'t start with "{expected_value}"')
 def then_header_doesnt_starts_with(ctx, expected_header, expected_value):
     value = ctx.zato.response.data.headers[expected_header]
     assert not value.startswith(expected_value), 'Expected for header `{}` not to start with `{}` yet it\'s `{}`'.format(
         expected_header, expected_value, value)
     return True
 
-@then('header "{expected_header}" ends with')
+@then('header "{expected_header}" ends with "{expected_value}"')
 def then_header_ends_with(ctx, expected_header, expected_value):
     value = ctx.zato.response.data.headers[expected_header]
     assert value.endswith(expected_value), 'Expected for header `{}` to end with `{}` but it\'s `{}`'.format(
         expected_header, expected_value, value)
     return True
 
-@then('header "{expected_header}" doesn\'t end with')
+@then('header "{expected_header}" doesn\'t end with "{expected_value}"')
 def then_header_doesnt_end_with(ctx, expected_header, expected_value):
     value = ctx.zato.response.data.headers[expected_header]
     assert not value.endswith(expected_value), 'Expected for header `{}` not to end with `{}` yet it\'s `{}`'.format(
@@ -222,10 +222,23 @@ def then_header_doesnt_end_with(ctx, expected_header, expected_value):
 @then('I store "{path}" from response under "{name}", default "{default}"')
 def then_store_path_under_name_with_default(ctx, path, name, default):
     if ctx.zato.request.is_xml:
-        value = 1
+        value = ctx.zato.response.data_impl.xpath(path)
+        if value:
+            if len(value) == 1:
+                value = value[0].text
+            else:
+                value = [elem.text for elem in value]
+        else:
+            if default == NO_VALUE:
+                raise ValueError('No such path `{}`'.format(path))
+            else:
+                value = default
     else:
-        value = get_pointer(ctx.zato.response.data_impl, path)
-        ctx.zato.user_data[name] = value
+        value = get_pointer(ctx.zato.response.data_impl, path, default)
+        if value == NO_VALUE:
+            raise ValueError('No such path `{}`'.format(path))
+
+    ctx.zato.user_data[name] = value
 
 @then('I store "{path}" from response under "{name}"')
 def then_store_path_under_name(ctx, path, name):

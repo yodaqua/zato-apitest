@@ -47,6 +47,10 @@ def given_json_pointer_in_request_is_a_random_string(ctx, path):
 def given_json_pointer_in_request_is_a_random_integer(ctx, path):
     set_pointer(ctx.zato.request.data_impl, path, util.rand_int())
 
+@given('JSON Pointer "{path}" in request is a random float')
+def given_json_pointer_in_request_is_a_random_integer(ctx, path):
+    set_pointer(ctx.zato.request.data_impl, path, util.rand_float())
+
 @given('JSON Pointer "{path}" in request is one of "{value}"')
 def given_json_pointer_in_request_is_one_of(ctx, path, value):
     set_pointer(ctx.zato.request.data_impl, path, util.any_from_list(value))
