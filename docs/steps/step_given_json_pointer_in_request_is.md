@@ -1,5 +1,5 @@
 
-JSON Pointer "{path}" in request is "{value}"
+Given JSON Pointer "{path}" in request is "{value}"
 =============================================================================================================
 
 Usage example

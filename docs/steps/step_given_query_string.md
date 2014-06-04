@@ -1,5 +1,5 @@
 
-query string "{query_string}"
+Given query string "{query_string}"
 =============================================================================================================
 
 Usage example
