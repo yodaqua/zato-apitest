@@ -42,6 +42,7 @@ Anatomy of a test
 
 Let's dissect directories that were created after running ```apitest init```
 
+```
 ~/mytests
 ├── config
 │   └── behave.ini
@@ -59,14 +60,14 @@ Let's dissect directories that were created after running ```apitest init```
         ├── request
         │   └── demo.xml
         └── response
-
-Only the interesting ones are discussed below:
+```
 
 
  Path                        | Description
 ---------------------------- | ----------------------------------------------------------------------------------------------------------------------
 ./config/behave.ini          | Low-level configuration that is passed to the underlying [behave] (https://pypi.python.org/pypi/behave) library as-is.
 ./features/demo.feature      | A set of tests for a single feature under consideration.
+./features/environment.py    | Place to keep hooks invoked throughout a test case's life-cycle in.
 ./features/json/request/*    | JSON requests, if any, needed as input to APIs under tests.
 ./features/json/response/*   | JSON responses you expect for APIs to produce, used for smart comparison.
 ./features/steps/steps.py    | Custom assertions go here.
