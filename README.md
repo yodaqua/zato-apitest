@@ -189,8 +189,6 @@ Scenario: REST customer update
 Available steps
 ---------------
 
-<div style="font-size:10px">
-
 Section | Part    | Pattern                                   | Notes                                                                                                                                                           | Details
 --------|---------|-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------
 HTTP    | Given   | ```address "{address}"```                 | An address of the API to invoke                                                         | [Details] ()
@@ -204,8 +202,6 @@ HTTP    | Given   | ```request is "{data}"```                 | Request to use, 
 HTTP    | Given   | ```query string "{query_string}"```       | Query string parameters in format of ?a=1&b=2, including the question mark
 Common  | Given   | ```date format "{name}" "{format}"```     | Stores a date format ```format``` under a label ```name``` for use in later assertions
 Common  | Given   | ```I store "{value}" under "{name}"```    | Stores an arbitrary ```value``` under a ```name``` for use in later assertions
-
-</div>
 
 
 Where to keep configuration
