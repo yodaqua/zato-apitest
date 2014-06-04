@@ -111,12 +111,13 @@ How you structure the tests is completely up to you as long as individual files 
 Anatomy of a test
 -----------------
 
-Here's how a sample test kept in ```./features/cust-update.feature``` may look like:
+Here's how a sample test kept in ```./features/cust-update.feature``` may look like. For comparison, it shows both SOAP and REST
+assertions. This is the literal copy of a test, everything is in plain English:
 
 ```
 Feature: Customer update
 
-Scenario: *** SOAP customer update ***
+Scenario: SOAP customer update
 
     Given address "http://example.com"
     Given URL path "/xml/customer"
@@ -135,14 +136,14 @@ Scenario: *** SOAP customer update ***
 
     And context is cleaned up
 
-Scenario: *** REST customer update ***
+Scenario: REST customer update
 
     Given address "http://example.com"
     Given URL path "/json/customer"
     Given query string "?id=123"
     Given HTTP method "PUT"
     Given format "JSON"
-    Given header "X-Custom-Header" "MyValue"
+    Given header "X-Node" "server-test-19"
     Given request "cust-update.json"
     Given JSON Pointer "/name" in request is "Maria"
     Given JSON Pointer "/last-seen" in request is UTC now "default"
@@ -155,8 +156,18 @@ Scenario: *** REST customer update ***
     And header "X-My-Header" is "Cool"
 ```
 
-Available assertions
---------------------
+- Each test begins with a ```Feature: ``` preamble which denotes what is being tested
+- A test may have multiple scenarios - here one scenario has been created for each SOAP and REST
+- Each scenario has 3 parts, corresponding to building a request, invoking an URL and running assertions on a response received:
+
+  - One or more ```Given``` steps
+  - Exactly one ```When``` step
+  - One or more ```Then/And``` steps. There is no difference between how ```Then``` and ```And``` work, simply the first
+    assertion is called ```Then``` and the rest of them is ```And```. Any assertion may come first
+    
+
+Available steps
+---------------
 
 Where to keep configuration
 ---------------------------
