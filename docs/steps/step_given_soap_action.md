@@ -11,7 +11,7 @@ Feature: zatoapi-test docs
 Scenario: Given SOAP action "{value}"
 
     Given address "http://apitest-demo.zato.io"
-    Given URL path "/demo/XML"
+    Given URL path "/demo/xml"
     Given format "XML"
     Given SOAP action "my:soap:action"
 

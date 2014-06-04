@@ -11,10 +11,10 @@ Feature: zatoapi-test docs
 Scenario: Given XPath "{xpath}" in request is a random date between "{date_start}" and "{date_end}" "{format}"
 
     Given address "http://apitest-demo.zato.io"
-    Given URL path "/demo/XML"
+    Given URL path "/demo/xml"
     Given HTTP method "POST"
     Given format "XML"
-    Given request "demo.xml"
+    Given request is "<req><howdy>foo</howdy></req>"
     Given XPath "//howdy" in request is a random date between "2019-07-25" and "2031-01-29" "default"
 
     When the URL is invoked
