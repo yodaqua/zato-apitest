@@ -149,14 +149,16 @@ def then_xpath_is_empty(ctx, elem, **kwargs):
 @then('XPath "{elem}" isn\'t empty')
 @handle_xpath(False)
 def then_xpath_is_not_empty(ctx, elem, **kwargs):
-    pass
+    assert elem.text != '', 'Elem `{!r} should not be empty, value: `{}`'.format(elem, etree.tostring(elem))
 
 @then('XPath "{elem}" is one of "{value}"')
 @handle_xpath(False)
 def then_xpath_is_one_of(ctx, elem, value, **kwargs):
-    pass
+    value = util.parse_list(value)
+    assert elem.text in value, 'Elem `{!r} should be among `{}`'.format(etree.tostring(elem), value)
 
 @then('XPath "{elem}" isn\'t of "{value}"')
 @handle_xpath(False)
 def then_xpath_is_not_one_of(ctx, elem, value, **kwargs):
-    pass
+    value = util.parse_list(value)
+    assert elem.text not in value, 'Elem `{!r} should not be among `{}`'.format(etree.tostring(elem), value)
