@@ -63,15 +63,15 @@ Let's dissect directories that were created after running ```apitest init```
 Only the interesting ones are discussed below:
 
 
- Path                        Description
----------------------------- ----------------------------------------------------------------------------------------------------------------------
-./config/behave.ini          Low-level configuration that is passed to the underlying [behave] (https://pypi.python.org/pypi/behave) library as-is.
-./features/demo.feature      A set of tests for a single feature under consideration.
-./features/json/request/*    JSON requests, if any, needed as input to APIs under tests.
-./features/json/response/*   JSON responses you expect for APIs to produce, used for smart comparison.
-./features/steps/steps.py    Custom assertions go here.
-./features/xml/request/*     XML requests (including SOAP), if any, needed as input to APIs under tests.
-./features/xml/response/*    *(Currently not used, future versions will allow for comparing XML/SOAP responses directly)*
+ Path                        | Description
+---------------------------- | ----------------------------------------------------------------------------------------------------------------------
+./config/behave.ini          | Low-level configuration that is passed to the underlying [behave] (https://pypi.python.org/pypi/behave) library as-is.
+./features/demo.feature      | A set of tests for a single feature under consideration.
+./features/json/request/*    | JSON requests, if any, needed as input to APIs under tests.
+./features/json/response/*   | JSON responses you expect for APIs to produce, used for smart comparison.
+./features/steps/steps.py    | Custom assertions go here.
+./features/xml/request/*     | XML requests (including SOAP), if any, needed as input to APIs under tests.
+./features/xml/response/*    | *(Currently not used, future versions will allow for comparing XML/SOAP responses directly)*
 
 
 Available assertions
