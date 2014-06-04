@@ -126,11 +126,6 @@ class GivenTestCase(TestCase):
         common.given_header(self.ctx, header, value)
         self.assertEquals(self.ctx.zato.request.headers[header], value)
 
-    def test_given_soap_action(self):
-        value = util.rand_string()
-        common.given_soap_action(self.ctx, value)
-        self.assertEquals(self.ctx.zato.request.headers['SOAPAction'], value)
-
     def test_given_request_impl_xml(self):
         value = util.rand_string()
         data = '<abc>{}</abc>'.format(value)
