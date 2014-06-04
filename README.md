@@ -111,7 +111,7 @@ How you structure the tests is completely up to you as long as individual files 
 Anatomy of a test
 -----------------
 
-Here's how a sample test may look like:
+Here's how a sample test kept in ```./features/cust-update.feature``` may look like:
 
 ```
 Feature: Customer update
@@ -126,7 +126,7 @@ Scenario: *** SOAP customer update ***
     Given namespace prefix "cust" of "http://example.com/cust"
     Given request "cust-update.xml"
     Given XPath "//cust:name" in request is "Maria"
-    Given XPath "//cust:last-seen" in request is a random date between "2011-03-17" and "2013-05-29" "default"
+    Given XPath "//cust:last-seen" in request is a random date before "2015-03-17" "default"
 
     When the URL is invoked
 
