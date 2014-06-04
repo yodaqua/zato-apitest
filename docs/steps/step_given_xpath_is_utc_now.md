@@ -11,4 +11,4 @@ Usage example
 Discussion
 ----------
 
-(None)
+The format "default" is always available. Its value is "YYYY-MM-DDTHH:mm:ss".

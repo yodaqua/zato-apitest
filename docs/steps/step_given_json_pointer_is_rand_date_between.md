@@ -6,9 +6,22 @@ Usage example
 -------------
 
 ```
+Feature: zatoapi-test docs
+
+Scenario: Given JSON Pointer "{path}" in request is a random date after "{date_start}" "{format}"
+
+    Given address "http://apitest-demo.zato.io"
+    Given HTTP method "POST"
+    Given URL path "/demo/json"
+    Given JSON Pointer "/a" in request is a random date between "2011-11-27" and "2013-05-19" "default"
+
+    When the URL is invoked
+
+    Then status is "200"
 ```
 
 Discussion
 ----------
 
-(None)
+* The format "default" is always available. Its value is "YYYY-MM-DDTHH:mm:ss".
+* Use format "YYYY-MM-DD" to specify "{date_start}" and "{date_end}".

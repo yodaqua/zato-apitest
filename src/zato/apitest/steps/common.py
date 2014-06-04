@@ -40,13 +40,16 @@ def when_the_url_is_invoked(ctx, adapters=None):
     adapters = adapters or []
     method = ctx.zato.request.get('method', 'GET')
     address = ctx.zato.request.get('address')
-    url_path = ctx.zato.request.get('url_path')
+    url_path = ctx.zato.request.get('url_path', '/')
     qs = ctx.zato.request.get('query_string', '')
 
-    if ctx.zato.request.is_xml:
-        data = etree.tostring(ctx.zato.request.data_impl)
-    elif ctx.zato.request.is_json:
-        data = json.dumps(ctx.zato.request.data_impl, indent=2)
+    if 'data_impl' in ctx.zato.request:
+        if ctx.zato.request.is_xml:
+            data = etree.tostring(ctx.zato.request.data_impl)
+        elif ctx.zato.request.is_json:
+            data = json.dumps(ctx.zato.request.data_impl, indent=2)
+    else:
+        data = ''
 
     ctx.zato.response = Bunch()
 
@@ -82,6 +85,9 @@ def given_http_method(ctx, method):
 def given_format(ctx, format):
     ctx.zato.request.format = format
 
+    ctx.zato.request.is_xml = ctx.zato.request.format == 'XML'
+    ctx.zato.request.is_json = ctx.zato.request.format == 'JSON'
+
 @given('user agent is "{value}"')
 def given_user_agent_is(ctx, value):
     ctx.zato.request.headers['User-Agent'] = value
@@ -93,9 +99,6 @@ def given_header(ctx, header, value):
 def given_request_impl(ctx, data):
 
     ctx.zato.request.data = data
-
-    ctx.zato.request.is_xml = ctx.zato.request.format == 'XML'
-    ctx.zato.request.is_json = ctx.zato.request.format == 'JSON'
 
     if ctx.zato.request.is_xml:
         ctx.zato.request.data_impl = etree.fromstring(ctx.zato.request.data)
