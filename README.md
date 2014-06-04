@@ -181,8 +181,9 @@ Scenario: REST customer update
 Available steps
 ---------------
 
-Part | Pattern | Section | Notes | Details
-Given | address "{address}" | Common | Establishes an address to invoke | [Details] ()
+Part  | Section | Pattern             | Notes                            | Details
+------|---------|---------------------|----------------------------------|--------------------------------
+Given | Common  | address "{address}" | Establishes an address to invoke | [Details] ()
 
 
 
