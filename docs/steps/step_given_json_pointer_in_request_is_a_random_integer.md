@@ -6,7 +6,7 @@ Usage example
 -------------
 
 ```
-Feature: zatoapi-test docs
+Feature: zato-apitest docs
 
 Scenario: Given JSON Pointer "{path}" in request is a random integer
 

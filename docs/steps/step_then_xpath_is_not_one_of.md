@@ -6,7 +6,7 @@ Usage example
 -------------
 
 ```
-Feature: zatoapi-test docs
+Feature: zato-apitest docs
 
 Scenario: Then XPath "{xpath}" isn't one of "{value}
 

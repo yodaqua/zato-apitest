@@ -6,7 +6,7 @@ Usage example
 -------------
 
 ```
-Feature: zatoapi-test docs
+Feature: zato-apitest docs
 
 Scenario: Given XPath "{xpath}" in request is a random date between "{date_start}" and "{date_end}" "{format}"
 
