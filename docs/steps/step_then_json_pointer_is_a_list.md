@@ -16,7 +16,7 @@ Scenario: Then JSON Pointer "{path}" is a list "{value}"
 
     When the URL is invoked
 
-    Then JSON Pointer "/action/code-list" is a list "q,w,e,r,t,y"
+    Then JSON Pointer "/action/list" is a list "q,w,e,r,t,y"
 ```
 
 Discussion
