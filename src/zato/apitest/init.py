@@ -25,15 +25,23 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 
 # Bunch
+from bunch import bunchify
+
+# ConfigObj
+from configobj import ConfigObj
+
+# Bunch
 from bunch import Bunch
 
 def before_feature(context, feature):
+    environment_dir = os.path.dirname(os.path.realpath(__file__))
     context.zato = Bunch()
-    context.zato.environment_dir = os.path.dirname(os.path.realpath(__file__))
+    context.zato.environment_dir = environment_dir
     context.zato.request = Bunch()
     context.zato.request.headers = {}
     context.zato.request.ns_map = {}
     context.zato.request.date_formats = {}
+    context.zato.user_config = bunchify(ConfigObj(os.path.join(environment_dir, 'config.ini')))['user']
 '''
 
 STEPS = '''# -*- coding: utf-8 -*-
@@ -50,9 +58,12 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from zato.apitest import steps as default_steps
 '''
 
-BEHAVE_INI = """
+CONFIG_INI = """
 [behave]
 options=--format pretty --no-source --no-timings
+
+[user]
+sample=Hello
 """
 
 DEMO_FEATURE = """
@@ -159,7 +170,6 @@ def handle(base_path):
     os.mkdir(steps_dir)
     open(os.path.join(steps_dir, 'steps.py'), 'w').write(STEPS)
 
-    # User-provided CLI parameters, if any, passed to behave as they are
-    config_dir = os.path.join(base_path, 'config')
-    os.mkdir(config_dir)
-    open(os.path.join(config_dir, 'behave.ini'), 'w').write(BEHAVE_INI)
+    # User-provided CLI parameters, if any, passed to behave as they are.
+    # Also, user-defined config stanzas.
+    open(os.path.join(features_dir, 'config.ini'), 'w').write(CONFIG_INI)

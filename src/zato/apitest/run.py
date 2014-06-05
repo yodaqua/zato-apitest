@@ -19,7 +19,7 @@ from behave.runner import Runner
 from configobj import ConfigObj
 
 def handle(path):
-    file_conf = ConfigObj(os.path.join(path, 'config', 'behave.ini'))
+    file_conf = ConfigObj(os.path.join(path, 'features', 'config.ini'))
     behave_options = file_conf['behave']['options']
 
     conf = Configuration(behave_options)
