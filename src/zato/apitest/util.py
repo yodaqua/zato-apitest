@@ -30,12 +30,44 @@ from zato.apitest import version
 random.seed()
 
 # Singleton used for storing Zato's own context across features and steps.
-# Not thread-safe so this will have to be added if need be.
+# Not thread/greenlet-safe so this will have to be added if need be.
 context = Bunch()
+
+# ################################################################################################################################
+
+def get_value_from_environ(ctx, name):
+    return os.environ[name]
+
+def get_value_from_ctx(ctx, name):
+    return ctx.zato.user_ctx[name]
+
+def get_value_from_config(ctx, name):
+    return ctx.zato.user_config[name]
+
+config_functions = {
+    '$': get_value_from_environ,
+    '#': get_value_from_ctx,
+    '@': get_value_from_config
+}
+
+def obtain_values(func):
+    """ Functions decorated with this one will be able to obtain values from config sources prefixed with $, # or @.
+    """
+    def inner(ctx, *args, **kwargs):
+        for kwarg, value in kwargs.items():
+            if value:
+                config_key = value[0]
+                if config_key in config_functions:
+                    config_func = config_functions[config_key]
+                    kwargs[kwarg] = config_func(ctx, value[1:])
+        return func(ctx, *args, **kwargs)
+    return inner
+
+# ################################################################################################################################
 
 def new_context(old_ctx, environment_dir):
     _context = Bunch()
-    _context.user_data = {}
+    _context.user_ctx = {}
     _context.date_formats = {'default':'YYYY-MM-DDTHH:mm:ss'}
     _context.environment_dir = old_ctx.zato.environment_dir if old_ctx else environment_dir
     _context.request = Bunch()

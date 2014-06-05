@@ -22,7 +22,7 @@ from lxml import etree
 from mock import patch
 
 # Zato
-from zato.apitest import util
+from zato.apitest import INVALID, util
 from zato.apitest.steps import common
 from zato.apitest.test import JSONEchoAdapter, xml_c14nize, XMLEchoAdapter
 
@@ -130,19 +130,21 @@ class GivenTestCase(TestCase):
         value = util.rand_string()
         data = '<abc>{}</abc>'.format(value)
         self.ctx.zato.request.format = 'XML'
+        self.ctx.zato.request.is_xml = True
         common.given_request_impl(self.ctx, data)
 
         self.assertEquals(self.ctx.zato.request.is_xml, True)
-        self.assertEquals(self.ctx.zato.request.is_json, False)
+        self.assertEquals(self.ctx.zato.request.get('is_json', INVALID), INVALID)
         self.assertEquals(self.ctx.zato.request.data_impl.xpath('/abc')[0].text, value)
 
     def test_given_request_impl_json(self):
         value = util.rand_string()
         data = '{"abc":"%s"}' % value
         self.ctx.zato.request.format = 'JSON'
+        self.ctx.zato.request.is_json = True
         common.given_request_impl(self.ctx, data)
 
-        self.assertEquals(self.ctx.zato.request.is_xml, False)
+        self.assertEquals(self.ctx.zato.request.get('is_xml', INVALID), INVALID)
         self.assertEquals(self.ctx.zato.request.is_json, True)
         self.assertEquals(self.ctx.zato.request.data_impl['abc'], value)
 
@@ -194,12 +196,13 @@ class GivenTestCase(TestCase):
         with patch('zato.apitest.util.get_full_path', get_full_path):
             with patch('zato.apitest.util.get_file', get_file):
                 self.ctx.zato.request.format = _format
+                self.ctx.zato.request.is_xml = True
                 self.ctx.zato.environment_dir = _base_dir
 
                 common.given_request(self.ctx, _request_path)
 
                 self.assertEquals(self.ctx.zato.request.is_xml, True)
-                self.assertEquals(self.ctx.zato.request.is_json, False)
+                self.assertEquals(self.ctx.zato.request.get('is_json', INVALID), INVALID)
                 self.assertEquals(self.ctx.zato.request.data_impl.xpath('/abc')[0].text, value)
 
     def test_given_request_json(self):
@@ -221,11 +224,12 @@ class GivenTestCase(TestCase):
         with patch('zato.apitest.util.get_full_path', get_full_path):
             with patch('zato.apitest.util.get_file', get_file):
                 self.ctx.zato.request.format = _format
+                self.ctx.zato.request.is_json = True
                 self.ctx.zato.environment_dir = _base_dir
 
                 common.given_request(self.ctx, _request_path)
 
-                self.assertEquals(self.ctx.zato.request.is_xml, False)
+                self.assertEquals(self.ctx.zato.request.get('is_xml', INVALID), INVALID)
                 self.assertEquals(self.ctx.zato.request.is_json, True)
                 self.assertEquals(self.ctx.zato.request.data_impl['abc'], value)
 
@@ -247,7 +251,7 @@ class GivenTestCase(TestCase):
     def test_given_i_store_value_under_name(self):
         value, name = util.rand_string(2)
         common.given_i_store_value_under_name(self.ctx, value, name)
-        self.assertEquals(self.ctx.zato.user_data[name], value)
+        self.assertEquals(self.ctx.zato.user_ctx[name], value)
 
 class ThenTestCase(TestCase):
 

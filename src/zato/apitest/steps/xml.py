@@ -20,10 +20,12 @@ from .. import util
 # ################################################################################################################################
 
 @given('namespace prefix "{prefix}" of "{namespace}"')
+@util.obtain_values
 def given_namespace_prefix(ctx, prefix, namespace):
     ctx.zato.request.ns_map[prefix] = namespace
 
 @given('SOAP action "{value}"')
+@util.obtain_values
 def given_soap_action(ctx, value):
     ctx.zato.request.headers['SOAPAction'] = value
 
@@ -56,21 +58,25 @@ def handle_xpath(is_request):
 
 @given('XPath "{xpath}" in request is "{value}"')
 @handle_xpath(True)
+@util.obtain_values
 def given_xpath_in_request_is(ctx, elem, value, **ignored):
     elem.text = value
 
 @given('XPath "{xpath}" in request is a random string')
 @handle_xpath(True)
+@util.obtain_values
 def given_xpath_set_to_rand_string(ctx, elem, **ignored):
     elem.text = util.rand_string()
 
 @given('XPath "{xpath}" in request is a random integer')
 @handle_xpath(True)
+@util.obtain_values
 def given_xpath_set_to_rand_int(ctx, elem, **ignored):
     elem.text = str(util.rand_int())
 
 @given('XPath "{xpath}" in request is a random float')
 @handle_xpath(True)
+@util.obtain_values
 def given_xpath_set_to_rand_float(ctx, elem, **ignored):
     elem.text = str(util.rand_float())
 
@@ -78,31 +84,37 @@ def given_xpath_set_to_rand_float(ctx, elem, **ignored):
 
 @given('XPath "{xpath}" in request is a random date "{format}"')
 @handle_xpath(True)
+@util.obtain_values
 def given_xpath_is_rand_date(ctx, elem, format, **ignored):
     elem.text = util.rand_date(ctx.zato.date_formats[format])
 
 @given('XPath "{xpath}" in request is now "{format}"')
 @handle_xpath(True)
+@util.obtain_values
 def given_xpath_is_now(ctx, elem, format, **ignored):
     elem.text = util.now(format=ctx.zato.date_formats[format])
 
 @given('XPath "{xpath}" in request is UTC now "{format}"')
 @handle_xpath(True)
+@util.obtain_values
 def given_xpath_is_utc_now(ctx, elem, format, **ignored):
     elem.text = util.utcnow(format=ctx.zato.date_formats[format])
 
 @given('XPath "{xpath}" in request is a random date after "{date_start}" "{format}"')
 @handle_xpath(True)
+@util.obtain_values
 def given_xpath_is_rand_date_after(ctx, elem, date_start, format, **ignored):
     elem.text = util.date_after(date_start, ctx.zato.date_formats[format])
 
 @given('XPath "{xpath}" in request is a random date before "{date_end}" "{format}"')
 @handle_xpath(True)
+@util.obtain_values
 def given_xpath_is_rand_date_before(ctx, elem, date_end, format, **ignored):
     elem.text = util.date_before(date_end, ctx.zato.date_formats[format])
 
 @given('XPath "{xpath}" in request is a random date between "{date_start}" and "{date_end}" "{format}"')
 @handle_xpath(True)
+@util.obtain_values
 def given_xpath_is_rand_date_between(ctx, elem, date_start, date_end, format, **ignored):
     elem.text = util.date_between(date_start, date_end, ctx.zato.date_formats[format])
 
@@ -110,6 +122,7 @@ def given_xpath_is_rand_date_between(ctx, elem, date_start, date_end, format, **
 
 @given('XPath "{xpath}" in request is one of "{value}"')
 @handle_xpath(True)
+@util.obtain_values
 def given_xpath_set_to_one_of(ctx, elem, value, **ignored):
     elem.text = util.any_from_list(value)
 
@@ -128,37 +141,44 @@ def _assert_xpath_value(ctx, elem, force_type=None, **kwargs):
 
 @then('XPath "{elem}" is "{value}"')
 @handle_xpath(False)
+@util.obtain_values
 def then_xpath_is(ctx, elem, **kwargs):
     return _assert_xpath_value(ctx, elem, force_type=None, **kwargs)
 
 @then('XPath "{elem}" is an integer "{value}"')
 @handle_xpath(False)
+@util.obtain_values
 def then_xpath_is_an_integer(ctx, elem, **kwargs):
     return _assert_xpath_value(ctx, elem, force_type=int, **kwargs)
 
 @then('XPath "{elem}" is a float "{value}"')
 @handle_xpath(False)
+@util.obtain_values
 def then_xpath_is_a_float(ctx, elem, value, **kwargs):
     return _assert_xpath_value(ctx, elem, force_type=float, **kwargs)
 
 @then('XPath "{elem}" is empty')
 @handle_xpath(False)
+@util.obtain_values
 def then_xpath_is_empty(ctx, elem, **kwargs):
     return _assert_xpath_value(ctx, elem, value='')
 
 @then('XPath "{elem}" isn\'t empty')
 @handle_xpath(False)
+@util.obtain_values
 def then_xpath_is_not_empty(ctx, elem, **kwargs):
     assert elem.text != '', 'Elem `{!r} should not be empty, value: `{}`'.format(elem, etree.tostring(elem))
 
 @then('XPath "{elem}" is one of "{value}"')
 @handle_xpath(False)
+@util.obtain_values
 def then_xpath_is_one_of(ctx, elem, value, **kwargs):
     value = util.parse_list(value)
     assert elem.text in value, 'Elem `{!r} should be among `{}`'.format(etree.tostring(elem), value)
 
 @then('XPath "{elem}" isn\'t of "{value}"')
 @handle_xpath(False)
+@util.obtain_values
 def then_xpath_is_not_one_of(ctx, elem, value, **kwargs):
     value = util.parse_list(value)
     assert elem.text not in value, 'Elem `{!r} should not be among `{}`'.format(etree.tostring(elem), value)
