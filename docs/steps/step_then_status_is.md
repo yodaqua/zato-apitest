@@ -8,7 +8,7 @@ Usage example
 ```
 Feature: zato-apitest docs
 
-Scenario: Given address "{address}"
+Scenario: Then status is "{status}"
 
     Given address "http://apitest-demo.zato.io"
     Given URL path "/demo/json"

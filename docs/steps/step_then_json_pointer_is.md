@@ -16,7 +16,7 @@ Scenario: Then JSON Pointer "{path}" is "{value}"
 
     When the URL is invoked
 
-    Then JSON Pointer "/action/message" is "Now, is that cool or is that cool?"
+    Then JSON Pointer "/action/msg" is "Now, is that cool or is that cool?"
 ```
 
 Discussion

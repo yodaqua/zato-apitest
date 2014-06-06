@@ -16,7 +16,7 @@ Scenario: Then I store "{path}" from response under "{name}", default "{default}
 
     When the URL is invoked
 
-    Then I store "/hmm" from response under "my-variable", default "in-case-it-doesnt-exist'
+    Then I store "/hmm" from response under "my-variable", default "in-case-it-doesnt-exist"
 
 Scenario: Has access to variables
 

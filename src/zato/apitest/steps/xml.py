@@ -129,7 +129,7 @@ def given_xpath_set_to_one_of(ctx, elem, value, **ignored):
 # ################################################################################################################################
 
 def _assert_xpath_value(ctx, elem, force_type=None, **kwargs):
-    elem_text = elem.text
+    elem_text = elem.text if elem.text is not None else ''
     value = expected_value = kwargs['value']
 
     if force_type:
@@ -137,7 +137,7 @@ def _assert_xpath_value(ctx, elem, force_type=None, **kwargs):
         value = force_type(value)
 
     assert elem_text == value, '`{!r}` is `{!r}` instead of `{!r}` in `{!r}`'.format(
-        elem, value, expected_value, etree.tostring(elem))
+        elem, elem_text, expected_value, etree.tostring(elem))
 
 @then('XPath "{elem}" is "{value}"')
 @handle_xpath(False)
@@ -154,7 +154,7 @@ def then_xpath_is_an_integer(ctx, elem, **kwargs):
 @then('XPath "{elem}" is a float "{value}"')
 @handle_xpath(False)
 @util.obtain_values
-def then_xpath_is_a_float(ctx, elem, value, **kwargs):
+def then_xpath_is_a_float(ctx, elem, **kwargs):
     return _assert_xpath_value(ctx, elem, force_type=float, **kwargs)
 
 @then('XPath "{elem}" is empty')
@@ -176,7 +176,7 @@ def then_xpath_is_one_of(ctx, elem, value, **kwargs):
     value = util.parse_list(value)
     assert elem.text in value, 'Elem `{!r} should be among `{}`'.format(etree.tostring(elem), value)
 
-@then('XPath "{elem}" isn\'t of "{value}"')
+@then('XPath "{elem}" isn\'t one of "{value}"')
 @handle_xpath(False)
 @util.obtain_values
 def then_xpath_is_not_one_of(ctx, elem, value, **kwargs):

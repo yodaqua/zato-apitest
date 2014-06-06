@@ -16,7 +16,7 @@ Scenario: Then JSON Pointer "{path}" isn't empty
 
     When the URL is invoked
 
-    Then JSON Pointer "/action/message" isn't empty
+    Then JSON Pointer "/action/msg" isn't empty
 ```
 
 Discussion

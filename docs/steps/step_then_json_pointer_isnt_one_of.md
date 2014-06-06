@@ -16,7 +16,7 @@ Scenario: Then JSON Pointer "{path}" isn't one of "{value}"
 
     When the URL is invoked
 
-    Then JSON Pointer "/action/message" isn't one of "a,b,c,d,e"
+    Then JSON Pointer "/action/msg" isn't one of "a,b,c,d,e"
 ```
 
 Discussion

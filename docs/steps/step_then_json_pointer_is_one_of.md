@@ -16,7 +16,7 @@ Scenario: Then JSON Pointer "{path}" is one of "{value}"
 
     When the URL is invoked
 
-    Then JSON Pointer "/action/hello" is one of "a,b,c"
+    Then JSON Pointer "/hello" is one of "a,b,c"
 ```
 
 Discussion
