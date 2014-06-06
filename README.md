@@ -267,6 +267,11 @@ so that is where all the additional details are explained.
 Here's what needs to be added to ```./features/steps/steps.py``` for the new step to be available:
 
 ```python
+
+from random import choice
+
+week_days = 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
+
 @given('JSON Pointer "{path}" in request is a weekday after "{start}"')
 @obtain_values
 def given_weekday_after(ctx, path, start):
