@@ -62,13 +62,12 @@ Feature: zato.apitest demonstration
 
 Scenario: *** REST JSON Demo ***
 
-    Given address "http://localhost:17010"
-    Given URL path "/demo/json"
-    Given query string "?id=123"
-    Given HTTP method "PUT"
+    Given address "http://apitest-demo.zato.io"
+    Given URL path "/demo/json3"
+    Given query string "?demo=1"
     Given format "JSON"
     Given header "X-Custom-Header" "MyValue"
-    Given request "demo.json"
+    Given request is "{}"
     Given JSON Pointer "/a" in request is "abc"
     Given JSON Pointer "/foo" in request is an integer "7"
     Given JSON Pointer "/bar" in request is a list "1,2,3,4,5"
@@ -81,12 +80,8 @@ Scenario: *** REST JSON Demo ***
     And JSON Pointer "/action/code" is an integer "0"
     And JSON Pointer "/action/flow" is a list "Ack,Done"
     And status is "200"
-    And header "X-My-Header" is "Cool"
-    And header "X-Another-Header" isn't "Foo"
-    And header "X-Yet-Another-Header" contains "Baz"
-    And header "X-Still-More" doesn't contain "Bar"
-    And header "X-Should-Be-Empty" is empty
-    And header "X-But-This-One-Should-Not" isn't empty
+    And header "Connection" is "keep-alive"
+    And header "Server" isn't empty
 
     # You can also compare responses directly inline ..
     And response is equal to "{"action":{"code":0, "msg":"Now, is that cool or is that cool?", "flow":["Ack", "Done"]}}"
@@ -96,10 +91,10 @@ Scenario: *** REST JSON Demo ***
 
 Scenario: *** XML/SOAP Demo ***
 
-    Given address "http://localhost:17010"
+    Given address "http://apitest-demo.zato.io"
     Given URL path "/demo/xml"
+    Given query string "?demo=1"
     Given SOAP action "demo:xml"
-    Given HTTP method "POST"
     Given format "XML"
     Given namespace prefix "demo" of "http://example.com/demo"
     Given request "demo.xml"
