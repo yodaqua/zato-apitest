@@ -255,6 +255,62 @@ Discussion:
 Extending zato-apitest and adding custom assertions
 ---------------------------------------------------
 
+zato-apitest comes with almost 100 of default steps and it's easy to add new ones.
+
+Let's say that we need to add a step that will return the name of any weekday coming after one provided on input. So, for instance,
+if it's Thursday on input, the step should return Friday, Saturday or Sunday.
+
+Each zato-apitest environment contains a ```./features/steps/steps.py``` module. Initially, it only imports all the default steps
+but you can simply add your own steps to it. They are always based on [behave] (https://pythonhosted.org/behave/)
+so that is where all the additional details are explained.
+
+Here's what needs to be added to ```./features/steps/steps.py``` for the new step to be available:
+
+```python
+@given('JSON Pointer "{path}" in request is a weekday after "{start}"')
+@obtain_values
+def given_weekday_after(ctx, path, start):
+    """ Returns any weekday after the start one.
+    """
+    # Sunday is the last day already
+    if start == 'Sun':
+        raise ValueError('{start} needs to be at most Sat')
+
+    elif start not in week_days:
+        raise ValueError('{{start}} ({}) needs to be among {}'.format(
+            start, week_days))
+
+    # Build a list of days to pick one from
+    start_idx = week_days.index(start)
+    remaining = week_days[start_idx+1:]
+
+    # Pick any from the remaining ones after start
+    value = choice(remaining)
+
+    # Set it in request
+    set_pointer(ctx, path, value)
+```
+
+Now you can make use of it tests, for instance:
+
+```
+Feature: zato-apitest docs
+
+Scenario: Extending zato-apitest
+
+    Given address "http://apitest-demo.zato.io"
+    Given URL path "/demo/json"
+    Given format "JSON"
+    Given request is "{}"
+    Given JSON Pointer "/day" in request is a weekday after "Fri"
+
+    When the URL is invoked
+
+    Then status is "200"
+
+```
+
+
 Naming conventions
 ------------------
 
