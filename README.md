@@ -255,7 +255,7 @@ Discussion:
 Extending zato-apitest and adding custom assertions
 ---------------------------------------------------
 
-zato-apitest comes with almost 100 of default steps and it's easy to add new ones.
+zato-apitest comes with [almost 100 of default steps] (./docs/steps) and it's easy to add new ones.
 
 Let's say that we need to add a step that will return the name of any weekday coming after one provided on input. So, for instance,
 if it's Thursday on input, the step should return Friday, Saturday or Sunday.
