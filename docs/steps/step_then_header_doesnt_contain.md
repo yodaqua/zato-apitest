@@ -12,7 +12,6 @@ Scenario: Then header "{header}" doesn't contain "{value}"
 
     Given address "http://apitest-demo.zato.io"
     Given URL path "/demo/json"
-    Given format "JSON"
 
     When the URL is invoked
 

@@ -22,7 +22,7 @@ Scenario: Has access to variables
 
     Given address "http://apitest-demo.zato.io"
     Given URL path "/demo/json"
-    Given request "{}"
+    Given request is "{}"
     Given JSON pointer "/foo" in request is "#my-variable"
 
     When the URL is invoked
