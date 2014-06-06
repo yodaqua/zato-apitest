@@ -204,7 +204,7 @@ Configuration of the test scenarios can be kept in and read from 3 places:
 The rules are:
 
 - Any value prefixed by '$' is read from an environment variable
-- Any value prefixed by '@' is read from ./features/config.ini's [user] key
+- Any value prefixed by '@' is read from ./features/config.ini's [user] stanza
 - Any value prefixed by '#' is read from the current test case's context
 
 Additionally, please keep in mind that individual tests can store variables basing on previous steps or responses hence combining
@@ -244,7 +244,7 @@ Discussion:
 
 - First scenario prepares data needed for the actual test performed by the second one
 - MYAPP_ADDRESS is an environment variable that can change from host to host without being hardcoded in test's body
-- MYAPP_PATH_LOGIN is a variable stored in ./features/config.ini's [user] key
+- MYAPP_PATH_LOGIN is a variable stored in ./features/config.ini's [user] stanza
 - Variable 'cust_name' is set to a static value of 'Maria Garca'
 - Variable 'cust_login' is set to a value returned in response to the fist scenario
 - Second scenario makes use of data prepared by the first one
