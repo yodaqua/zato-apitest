@@ -12,7 +12,6 @@ Scenario: Given XPath "{xpath}" in request is "{value}"
 
     Given address "http://apitest-demo.zato.io"
     Given URL path "/demo/xml"
-    Given HTTP method "POST"
     Given format "XML"
     Given request is "<req><howdy>foo</howdy></req>"
     Given XPath "//howdy" in request is "partner"

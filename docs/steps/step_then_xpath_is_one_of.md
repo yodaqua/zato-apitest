@@ -12,7 +12,6 @@ Scenario: Then XPath "{xpath}" is one of "{value}"
 
     Given address "http://apitest-demo.zato.io"
     Given URL path "/demo/xml"
-    Given HTTP method "POST"
     Given format "XML"
     Given request is "<req><howdy>foo</howdy></req>"
 

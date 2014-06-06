@@ -12,7 +12,6 @@ Scenario: Given XPath "{xpath}" in request is a random date between "{date_start
 
     Given address "http://apitest-demo.zato.io"
     Given URL path "/demo/xml"
-    Given HTTP method "POST"
     Given format "XML"
     Given request is "<req><howdy>foo</howdy></req>"
     Given XPath "//howdy" in request is a random date between "2019-07-25" and "2031-01-29" "default"

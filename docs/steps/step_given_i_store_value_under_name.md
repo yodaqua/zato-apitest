@@ -11,7 +11,6 @@ Feature: zato-apitest docs
 Scenario: Given I store "{value}" under "{name}"
 
     Given address "http://apitest-demo.zato.io"
-    Given HTTP method "POST"
     Given URL path "/demo/json"
     Given I store "MyValue" under "name"
 

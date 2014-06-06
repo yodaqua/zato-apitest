@@ -11,7 +11,6 @@ Feature: zato-apitest docs
 Scenario: Given request "{request_path}"
 
     Given address "http://apitest-demo.zato.io"
-    Given HTTP method "POST"
     Given URL path "/demo/json"
     Given format "JSON"
     Given request "my-request.json"
