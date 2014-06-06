@@ -11,6 +11,7 @@ Licensed under LGPLv3, see LICENSE.txt for terms and conditions.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import os
 from setuptools import setup, find_packages
 
 version = '1.0'
@@ -74,6 +75,10 @@ Here's a sample test case::
 More details, including plenty of usage examples, demos and screenshots, are `on GitHub <https://github.com/zatosource/zato-apitest>`_.
 """
 
+def parse_requirements(requirements):
+    with open(requirements) as f:
+        return [line.strip('\n') for line in f if line.strip('\n') and not line.startswith('#')]
+
 setup(
       name = 'zato-apitest',
       version = version,
@@ -92,6 +97,8 @@ setup(
       packages = find_packages(b'src'),
 
       namespace_packages = [b'zato'],
+      install_requires = parse_requirements(
+          os.path.join(os.path.dirname(os.path.realpath(__file__)), 'requirements.txt')),
 
       zip_safe = False,
 
