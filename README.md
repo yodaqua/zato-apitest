@@ -195,7 +195,7 @@ All the [default steps are listed separately] (./docs/steps/list.md). You're als
 Where to keep configuration
 ---------------------------
 
-Configuratio of the test scenarios can be kept in and read from 3 places:
+Configuration of the test scenarios can be kept in and read from 3 places:
 
 - Environment variables
 - ./features/config.ini
