@@ -16,7 +16,10 @@ from datetime import timedelta
 from arrow import api as arrow_api
 
 # Bunch
-from bunch import Bunch
+from bunch import Bunch, bunchify
+
+# ConfigObj
+from configobj import ConfigObj
 
 # Dateutil
 from dateutil.parser import parse as parse_dt
@@ -65,7 +68,7 @@ def obtain_values(func):
 
 # ################################################################################################################################
 
-def new_context(old_ctx, environment_dir):
+def new_context(old_ctx, environment_dir, user_config=None):
     _context = Bunch()
     _context.user_ctx = {}
     _context.date_formats = {'default':'YYYY-MM-DDTHH:mm:ss'}
@@ -73,6 +76,8 @@ def new_context(old_ctx, environment_dir):
     _context.request = Bunch()
     _context.request.headers = {'User-Agent':'zato.apitest/{} (+https://zato.io)'.format(version)}
     _context.request.ns_map = {}
+    _context.user_config = user_config if user_config is not None else bunchify(
+        ConfigObj(os.path.join(environment_dir, 'config.ini')))['user']
 
     context.clear()
     context.update(_context)
@@ -120,7 +125,7 @@ def rand_int(min=0, max=100, count=1):
     else:
         return [random.choice(range(min, max)) for x in range(count)]
 
-def rand_float(min, max):
+def rand_float(min=0, max=100):
     return float(rand_int(min, max)) + random.random()
 
 def rand_date(format, start=None, stop=None):

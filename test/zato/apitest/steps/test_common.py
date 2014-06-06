@@ -94,7 +94,7 @@ class GivenTestCase(TestCase):
 
     def setUp(self):
         self.ctx = Bunch()
-        self.ctx.zato = util.new_context(None, util.rand_string())
+        self.ctx.zato = util.new_context(None, util.rand_string(), {})
 
     def test_given_address(self):
         value = util.rand_string()
@@ -257,7 +257,7 @@ class ThenTestCase(TestCase):
 
     def setUp(self):
         self.ctx = Bunch()
-        self.ctx.zato = util.new_context(None, util.rand_string())
+        self.ctx.zato = util.new_context(None, util.rand_string(), {})
         self.ctx.zato.response = Bunch()
         self.ctx.zato.response.data = Bunch()
         self.ctx.zato.response.data.headers = {}

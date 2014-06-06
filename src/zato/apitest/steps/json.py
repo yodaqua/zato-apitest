@@ -15,7 +15,7 @@ from behave import given, then
 from datadiff.tools import assert_equals
 
 # jsonpointer
-from jsonpointer import resolve_pointer as get_pointer, set_pointer
+from jsonpointer import resolve_pointer as get_pointer, set_pointer as _set_pointer
 
 # Zato
 from .. import util
@@ -23,81 +23,92 @@ from .. import INVALID
 
 # ################################################################################################################################
 
+def set_pointer(ctx, path, value):
+    if 'data_impl' not in ctx.zato.request:
+        raise ValueError('JSON Pointer called but no request set')
+
+    _set_pointer(ctx.zato.request.data_impl, path, value)
+
+# ################################################################################################################################
+
 @given('JSON Pointer "{path}" in request is "{value}"')
 @util.obtain_values
 def given_json_pointer_in_request_is(ctx, path, value):
-    set_pointer(ctx.zato.request.data_impl, path, value)
+    set_pointer(ctx, path, value)
 
 @given('JSON Pointer "{path}" in request is an integer "{value}"')
 @util.obtain_values
 def given_json_pointer_in_request_is_an_integer(ctx, path, value):
-    set_pointer(ctx.zato.request.data_impl, path, int(value))
+    set_pointer(ctx, path, int(value))
 
 @given('JSON Pointer "{path}" in request is a float "{value}"')
 @util.obtain_values
 def given_json_pointer_in_request_is_a_float(ctx, path, value):
-    set_pointer(ctx.zato.request.data_impl, path, float(value))
+    set_pointer(ctx, path, float(value))
 
 @given('JSON Pointer "{path}" in request is a list "{value}"')
 @util.obtain_values
 def given_json_pointer_in_request_is_a_list(ctx, path, value):
-    set_pointer(ctx.zato.request.data_impl, path, util.parse_list(value))
+    set_pointer(ctx, path, util.parse_list(value))
 
 @given('JSON Pointer "{path}" in request is a random string')
 @util.obtain_values
 def given_json_pointer_in_request_is_a_random_string(ctx, path):
-    set_pointer(ctx.zato.request.data_impl, path, util.rand_string())
+    set_pointer(ctx, path, util.rand_string())
 
 @given('JSON Pointer "{path}" in request is a random integer')
 @util.obtain_values
 def given_json_pointer_in_request_is_a_random_integer(ctx, path):
-    set_pointer(ctx.zato.request.data_impl, path, util.rand_int())
+    set_pointer(ctx, path, util.rand_int())
 
 @given('JSON Pointer "{path}" in request is a random float')
 @util.obtain_values
 def given_json_pointer_in_request_is_a_random_float(ctx, path):
-    set_pointer(ctx.zato.request.data_impl, path, util.rand_float())
+    set_pointer(ctx, path, util.rand_float())
 
 @given('JSON Pointer "{path}" in request is one of "{value}"')
 @util.obtain_values
 def given_json_pointer_in_request_is_one_of(ctx, path, value):
-    set_pointer(ctx.zato.request.data_impl, path, util.any_from_list(value))
+    set_pointer(ctx, path, util.any_from_list(value))
 
 # ################################################################################################################################
 
 @given('JSON Pointer "{path}" in request is a random date "{format}"')
 @util.obtain_values
 def given_json_pointer_is_rand_date(ctx, path, format):
-    set_pointer(ctx.zato.request.data_impl, path, util.rand_date(ctx.zato.date_formats[format]))
+    set_pointer(ctx, path, util.rand_date(ctx.zato.date_formats[format]))
 
 @given('JSON Pointer "{path}" in request is now "{format}"')
 @util.obtain_values
 def given_json_pointer_is_now(ctx, path, format):
-    set_pointer(ctx.zato.request.data_impl, path, util.now(format=ctx.zato.date_formats[format]))
+    set_pointer(ctx, path, util.now(format=ctx.zato.date_formats[format]))
 
 @given('JSON Pointer "{path}" in request is UTC now "{format}"')
 @util.obtain_values
 def given_json_pointer_is_utc_now(ctx, path, format):
-    set_pointer(ctx.zato.request.data_impl, path, util.utcnow(format=ctx.zato.date_formats[format]))
+    set_pointer(ctx, path, util.utcnow(format=ctx.zato.date_formats[format]))
 
 @given('JSON Pointer "{path}" in request is a random date after "{date_start}" "{format}"')
 @util.obtain_values
 def given_json_pointer_is_rand_date_after(ctx, path, date_start, format):
-    set_pointer(ctx.zato.request.data_impl, path, util.date_after(date_start, ctx.zato.date_formats[format]))
+    set_pointer(ctx, path, util.date_after(date_start, ctx.zato.date_formats[format]))
 
 @given('JSON Pointer "{path}" in request is a random date before "{date_end}" "{format}"')
 @util.obtain_values
 def given_json_pointer_is_rand_date_before(ctx, path, date_end, format):
-    set_pointer(ctx.zato.request.data_impl, path, util.date_before(date_end, ctx.zato.date_formats[format]))
+    set_pointer(ctx, path, util.date_before(date_end, ctx.zato.date_formats[format]))
 
 @given('JSON Pointer "{path}" in request is a random date between "{date_start}" and "{date_end}" "{format}"')
 @util.obtain_values
 def given_json_pointer_is_rand_date_between(ctx, path, date_start, date_end, format):
-    set_pointer(ctx.zato.request.data_impl, path, util.date_between(date_start, date_end, ctx.zato.date_formats[format]))
+    set_pointer(ctx, path, util.date_between(date_start, date_end, ctx.zato.date_formats[format]))
 
 # ################################################################################################################################
 
 def assert_value(ctx, path, value, wrapper=None):
+    if 'data_impl' not in ctx.zato.response:
+        raise ValueError('Assertion called but no format set')
+
     value = wrapper(value) if wrapper else value
     actual = get_pointer(ctx.zato.response.data_impl, path)
     assert_equals(value, actual)

@@ -13,7 +13,6 @@ Scenario: Given HTTP method "{method}"
     Given address "http://apitest-demo.zato.io"
     Given URL path "/demo/json"
     Given HTTP method "PATCH"
-    Given format "JSON"
 
     When the URL is invoked
 

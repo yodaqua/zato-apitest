@@ -24,24 +24,12 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 # stdlib
 import os
 
-# Bunch
-from bunch import bunchify
-
-# ConfigObj
-from configobj import ConfigObj
-
-# Bunch
-from bunch import Bunch
+# Zato
+from zato.apitest.util import new_context
 
 def before_feature(context, feature):
     environment_dir = os.path.dirname(os.path.realpath(__file__))
-    context.zato = Bunch()
-    context.zato.environment_dir = environment_dir
-    context.zato.request = Bunch()
-    context.zato.request.headers = {}
-    context.zato.request.ns_map = {}
-    context.zato.request.date_formats = {}
-    context.zato.user_config = bunchify(ConfigObj(os.path.join(environment_dir, 'config.ini')))['user']
+    context.zato = new_context(None, environment_dir)
 '''
 
 STEPS = '''# -*- coding: utf-8 -*-

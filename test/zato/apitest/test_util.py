@@ -35,7 +35,7 @@ class UtilTest(TestCase):
             environment_dir = rand_string()
             old_ctx = Bunch()
             old_ctx.zato = Bunch(environment_dir=environment_dir)
-            ctx = new_context(old_ctx, None)
+            ctx = new_context(old_ctx, None, {})
             self._test_new_context(ctx, environment_dir)
 
     def test_new_context_from_environment_dir(self):
@@ -43,5 +43,5 @@ class UtilTest(TestCase):
         # Same comment as in test_new_context_from_old_ctx.
         for x in range(2):
             environment_dir = rand_string()
-            ctx = new_context(None, environment_dir)
+            ctx = new_context(None, environment_dir, {})
             self._test_new_context(ctx, environment_dir)

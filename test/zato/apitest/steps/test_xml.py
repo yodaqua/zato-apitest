@@ -22,7 +22,7 @@ class GivenTestCase(TestCase):
 
     def setUp(self):
         self.ctx = Bunch()
-        self.ctx.zato = util.new_context(None, util.rand_string())
+        self.ctx.zato = util.new_context(None, util.rand_string(), {})
 
     def test_given_soap_action(self):
         value = util.rand_string()
