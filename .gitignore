@@ -1,6 +1,7 @@
 /apitest-env/
-.coverage
+/build/
 /dist/
+.coverage
 .idea/
 *.pyc
 *.pyo
