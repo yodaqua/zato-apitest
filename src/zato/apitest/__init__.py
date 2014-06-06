@@ -17,7 +17,7 @@ from uuid import uuid4
 # setuptools
 from pkg_resources import get_distribution
 
-version = get_distribution('zato.apitest').version
+version = get_distribution('zato-apitest').version
 
 INVALID = 'invalid-{}'.format(uuid4().hex)
 NO_VALUE = 'no-value-{}'.format(uuid4().hex)

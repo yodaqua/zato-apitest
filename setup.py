@@ -75,7 +75,7 @@ More details, including plenty of usage examples, demos and screenshots, are `on
 """
 
 setup(
-      name = 'zato.apitest',
+      name = 'zato-apitest',
       version = version,
 
       scripts = ['src/zato/apitest/console/apitest'],

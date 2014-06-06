@@ -63,7 +63,7 @@ sample=Hello
 """
 
 DEMO_FEATURE = """
-Feature: zato.apitest demonstration
+Feature: zato-apitest demonstration
 
 Scenario: *** REST JSON Demo ***
 
