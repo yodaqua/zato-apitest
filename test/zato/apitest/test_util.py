@@ -24,7 +24,7 @@ class UtilTest(TestCase):
         self.assertEquals(ctx_zato.environment_dir, environment_dir)
         self.assertDictEqual(ctx_zato.user_ctx, {})
         self.assertDictEqual(ctx_zato.date_formats, {'default':'YYYY-MM-DDTHH:mm:ss'})
-        self.assertDictEqual(ctx_zato.request.headers, {'User-Agent':'zato.apitest/{} (+https://zato.io)'.format(version)})
+        self.assertDictEqual(ctx_zato.request.headers, {'User-Agent':'zato-apitest/{} (+https://zato.io)'.format(version)})
         self.assertDictEqual(ctx_zato.request.ns_map, {})
         self.assertDictEqual(context, ctx_zato)
 

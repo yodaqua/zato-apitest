@@ -74,7 +74,7 @@ def new_context(old_ctx, environment_dir, user_config=None):
     _context.date_formats = {'default':'YYYY-MM-DDTHH:mm:ss'}
     _context.environment_dir = old_ctx.zato.environment_dir if old_ctx else environment_dir
     _context.request = Bunch()
-    _context.request.headers = {'User-Agent':'zato.apitest/{} (+https://zato.io)'.format(version)}
+    _context.request.headers = {'User-Agent':'zato-apitest/{} (+https://zato.io)'.format(version)}
     _context.request.ns_map = {}
     _context.user_config = user_config if user_config is not None else bunchify(
         ConfigObj(os.path.join(environment_dir, 'config.ini')))['user']
