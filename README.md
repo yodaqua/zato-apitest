@@ -195,11 +195,71 @@ All the [default steps are listed separately] (./docs/steps/list.md). You're als
 Where to keep configuration
 ---------------------------
 
-Linking tests to form complex scenarios
----------------------------------------
+Configuratio of the test scenarios can be kept in and read from 3 places:
+
+- Environment variables
+- ./features/config.ini
+- Test case-specifc context
+
+The rules are:
+
+- Any value prefixed by '$' is read from an environment variable
+- Any value prefixed by '@' is read from ./features/config.ini's [user] key
+- Any value prefixed by '#' is read from the current test case's context
+
+Additionally, please keep in mind that individual tests can store variables basing on previous steps or responses hence combining
+all the configuration options allows one to form advanced scenarios, such as the one below.
+
+```
+Feature: zato-apitest docs
+
+Scenario: Prepare data
+
+    Given address "$MYAPP_ADDRESS"
+    Given URL path "@MYAPP_PATH_LOGIN"
+    Given format "JSON"
+    Given I store "Maria Garca" under "cust_name"
+    Given request is "{}"
+    Given JSON Pointer "/customer_id" in request is "$MYAPP_DEFAULT_CUSTOMER"
+    
+    When the URL is invoked
+
+    Then I store "/login" from response under "cust_login"
+
+Scenario: Get customer payments
+
+    Given address "$MYAPP_ADDRESS"
+    Given URL path "@MYAPP_PATH_PAYMENTS"
+    Given format "JSON"
+    Given request is "{}"
+    Given JSON Pointer "/cust_login" in request is "#cust_login"
+    Given JSON Pointer "/cust_name" in request is "#cust_name"
+
+    When the URL is invoked
+
+    Then status is "200"
+```
+
+Discussion:
+
+- First scenario prepares data needed for the actual test performed by the second one
+- MYAPP_ADDRESS is an environment variable that can change from host to host without being hardcoded in test's body
+- MYAPP_PATH_LOGIN is a variable stored in ./features/config.ini's [user] key
+- Variable 'cust_name' is set to a static value of 'Maria Garca'
+- Variable 'cust_login' is set to a value returned in response to the fist scenario
+- Second scenario makes use of data prepared by the first one
+- Remeber to [clean up the context] (./docs/steps/step_then_context_is_cleaned_up.md) if you actually do not want
+  for any config variables to be carried over from a step to subsequent ones
+
 
 Extending zato-apitest and adding custom assertions
 ---------------------------------------------------
+
+Naming conventions
+------------------
+
+The name 'Zato', case insensitive, cannot be used anywhere in your tests. Don't use it as a prefix, suffix or anywhere else. This
+applies to step names, variables, functions, anything. This is a system name reserved for the tool's own purposes.
 
 License
 -------
