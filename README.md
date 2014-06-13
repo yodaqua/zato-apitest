@@ -296,7 +296,7 @@ def given_weekday_after(ctx, path, start):
     set_pointer(ctx, path, value)
 ```
 
-Now you can make use of it tests, for instance:
+Now you can make use of it in tests, for instance:
 
 ```
 Feature: zato-apitest docs
