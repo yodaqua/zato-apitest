@@ -7,7 +7,7 @@ Introduction
 zato-apitest is a friendly command line tool for creating beautiful tests of HTTP-based REST, XML and SOAP APIs with as little
 hassle as possible.
 
-Tests are written in plain English, with no programming needed, and can be trivially extended in Python if need be.
+Tests are written in plain English, with no programming needed, and can be trivially easy extended in Python if need be.
 
 Note that zato-apitest is meant to test APIs only. It's doesn't simulate a browser nor any sort of user interactions. It's meant
 purely for machine-machine API testing.
