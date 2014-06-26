@@ -42,9 +42,9 @@ What it can do
 - Store values extracted out of previous steps for use in subsequent steps, i.e. get a list of objects, pick ID of the first one
   and use this ID in later steps.
   
-- Be integrated with JUnit
+- Can be integrated with JUnit
 
-- Be very easily extended in Python
+- Can be very easily extended in Python
 
 Download and install
 --------------------
@@ -315,13 +315,24 @@ Scenario: Extending zato-apitest
 
 ```
 
-
 Naming conventions
 ------------------
 
 The name 'Zato', case insensitive, cannot be used anywhere in your tests. Don't use it as a prefix, suffix or anywhere else. This
 applies to step names, variables, functions, anything. This is a system name reserved for the tool's own purposes.
 
+Changelog
+---------
+
+* **1.1** - 26-06-2014
+
+  * Added HTTP Basic Auth
+
+* **1.0** - 06-06-2014
+
+  * Initial release
+
 License
 -------
 [LGPLv3] (./LICENSE.txt) - zato-apitest is free to use in open-source and proprietary programs.
+
