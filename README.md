@@ -321,17 +321,6 @@ Naming conventions
 The name 'Zato', case insensitive, cannot be used anywhere in your tests. Don't use it as a prefix, suffix or anywhere else. This
 applies to step names, variables, functions, anything. This is a system name reserved for the tool's own purposes.
 
-Changelog
----------
-
-* **1.1** - 26-06-2014
-
-  * Added HTTP Basic Auth
-
-* **1.0** - 06-06-2014
-
-  * Initial release
-
 License
 -------
 [LGPLv3] (./LICENSE.txt) - zato-apitest is free to use in open-source and proprietary programs.
