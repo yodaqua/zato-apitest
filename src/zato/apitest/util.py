@@ -73,6 +73,7 @@ def obtain_values(func):
 
 def new_context(old_ctx, environment_dir, user_config=None):
     _context = Bunch()
+    _context.auth = {}
     _context.user_ctx = {}
     _context.date_formats = {'default':'YYYY-MM-DDTHH:mm:ss'}
     _context.environment_dir = old_ctx.zato.environment_dir if old_ctx else environment_dir

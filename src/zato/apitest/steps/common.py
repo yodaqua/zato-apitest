@@ -31,10 +31,11 @@ from lxml import etree
 
 # Request
 from requests import api as req_api
+from requests.auth import HTTPBasicAuth
 
 # Zato
 from .. import util
-from .. import INVALID, NO_VALUE
+from .. import AUTH, INVALID, NO_VALUE
 
 # ################################################################################################################################
 
@@ -54,6 +55,13 @@ def when_the_url_is_invoked(ctx, adapters=None):
     else:
         data = ''
 
+    auth = None
+
+    # New in 1.1 hence optional
+    if ctx.zato.get('auth'):
+        if ctx.zato.auth['type'] == AUTH.BASIC_AUTH:
+            auth = HTTPBasicAuth(ctx.zato.auth['username'], ctx.zato.auth['password'])
+
     ctx.zato.response = Bunch()
 
     s = req_api.sessions.Session()
@@ -62,7 +70,7 @@ def when_the_url_is_invoked(ctx, adapters=None):
         s.mount('https://', adapter)
 
     ctx.zato.response.data = s.request(
-        method, '{}{}{}'.format(address, url_path, qs), data=data, headers=ctx.zato.request.headers)
+        method, '{}{}{}'.format(address, url_path, qs), data=data, headers=ctx.zato.request.headers, auth=auth)
 
     if ctx.zato.request.get('is_xml'):
         ctx.zato.response.data_impl = etree.fromstring(ctx.zato.response.data.text.encode('utf-8'))
@@ -135,6 +143,15 @@ def given_query_string(ctx, query_string):
 @util.obtain_values
 def given_date_format(ctx, name, format):
     ctx.zato.date_formats[name] = format
+
+# ################################################################################################################################
+
+@given('Basic Auth "{username}" "{password}"')
+@util.obtain_values
+def given_basic_auth(ctx, username, password):
+    ctx.zato.auth['type'] = AUTH.BASIC_AUTH
+    ctx.zato.auth['username'] = username
+    ctx.zato.auth['password'] = password
 
 # ################################################################################################################################
 
