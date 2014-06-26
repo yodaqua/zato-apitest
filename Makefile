@@ -14,7 +14,10 @@ install:
 
 clean:
 	rm -rf $(CURDIR)/$(ENV_NAME)
-	rm -rf $(CURDIR)/src/apitest.egg-info
+	rm -rf $(CURDIR)/build
+	rm -rf $(CURDIR)/dist
+	rm -rf $(CURDIR)/src/zato_apitest.egg-info
+	find $(CURDIR) -name '*.pyc' -exec rm {} \;
 
 demo:
 	$(MAKE) install
