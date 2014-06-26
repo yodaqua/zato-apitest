@@ -38,7 +38,7 @@ def cli_init(ctx, path, prompt_run=True):
     click.echo('OK, initialized.')
 
     if prompt_run:
-        click.echo('Run `apitest {}` for a live demo.'.format(path))
+        click.echo('Run `apitest run {}` for a live demo.'.format(path))
 
 @click.command()
 @click.argument('path', type=click.Path(exists=False, file_okay=False, resolve_path=True))
