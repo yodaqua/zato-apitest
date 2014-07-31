@@ -52,6 +52,8 @@ def when_the_url_is_invoked(ctx, adapters=None):
             data = etree.tostring(ctx.zato.request.data_impl)
         elif ctx.zato.request.is_json:
             data = json.dumps(ctx.zato.request.data_impl, indent=2)
+        elif ctx.zato.request.is_raw:
+            data = ctx.zato.request.data_impl
     else:
         data = ''
 
@@ -72,11 +74,17 @@ def when_the_url_is_invoked(ctx, adapters=None):
     ctx.zato.response.data = s.request(
         method, '{}{}{}'.format(address, url_path, qs), data=data, headers=ctx.zato.request.headers, auth=auth)
 
-    if ctx.zato.request.get('is_xml'):
+    # if the reply format is unset, assume it's the same as the request format
+    reply_format = ctx.zato.request.get('reply_format', ctx.zato.request.format)
+
+    if reply_format == 'XML':
         ctx.zato.response.data_impl = etree.fromstring(ctx.zato.response.data.text.encode('utf-8'))
 
-    elif ctx.zato.request.get('is_json'):
+    elif reply_format == 'JSON':
         ctx.zato.response.data_impl = json.loads(ctx.zato.response.data.text)
+
+    elif reply_format == 'RAW':
+        ctx.zato.response.data_impl = ctx.zato.response.data.text
 
 # ################################################################################################################################
 
@@ -101,6 +109,13 @@ def given_format(ctx, format):
 
     ctx.zato.request.is_xml = ctx.zato.request.format == 'XML'
     ctx.zato.request.is_json = ctx.zato.request.format == 'JSON'
+    ctx.zato.request.is_raw = ctx.zato.request.format == 'RAW'
+
+@given('reply format "{format}"')
+@util.obtain_values
+def given_reply_format(ctx, format):
+    ctx.zato.request.reply_format = format
+
 
 @given('user agent is "{value}"')
 @util.obtain_values
@@ -120,6 +135,8 @@ def given_request_impl(ctx, data):
         ctx.zato.request.data_impl = etree.fromstring(ctx.zato.request.data)
     elif ctx.zato.request.get('is_json'):
         ctx.zato.request.data_impl = json.loads(ctx.zato.request.data)
+    elif ctx.zato.request.get('is_raw'):
+        ctx.zato.request.data_impl = ctx.zato.request.data
     else:
         if not ctx.zato.request.format:
             raise ValueError('Format not set, cannot proceed')
@@ -300,8 +317,8 @@ def then_store_path_under_name(ctx, path, name):
 
 def needs_json(func):
     def inner(ctx, **kwargs):
-        if not ctx.zato.request.format == 'JSON':
-            raise TypeError('This step works with JSON only.')
+        if ctx.zato.request.get('reply_format', ctx.zato.request.format) != 'JSON':
+            raise TypeError('This step works with JSON replies only.')
         return func(ctx, **kwargs)
     return inner
 

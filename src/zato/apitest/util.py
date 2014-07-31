@@ -97,7 +97,12 @@ def get_file(path):
     return open(path).read()
 
 def get_data(ctx, req_or_resp, data_path):
-    full_path = get_full_path(ctx.zato.environment_dir, ctx.zato.request.format.lower(), req_or_resp, data_path)
+
+    full_path = get_full_path(ctx.zato.environment_dir,
+                              ctx.zato.request.get('reply_format', ctx.zato.request.format).lower(),
+                              req_or_resp,
+                              data_path)
+
     data = get_file(full_path) if data_path else ''
 
     if ctx.zato.request.format == 'XML' and not data:
