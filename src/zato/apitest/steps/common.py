@@ -75,7 +75,8 @@ def when_the_url_is_invoked(ctx, adapters=None):
         method, '{}{}{}'.format(address, url_path, qs), data=data, headers=ctx.zato.request.headers, auth=auth)
 
     # if the reply format is unset, assume it's the same as the request format
-    reply_format = ctx.zato.request.get('reply_format', ctx.zato.request.format)
+    # if the request format hasn't been specified either, assume 'RAW"
+    reply_format = ctx.zato.request.get('reply_format', ctx.zato.request.get("format", "RAW"))
 
     if reply_format == 'XML':
         ctx.zato.response.data_impl = etree.fromstring(ctx.zato.response.data.text.encode('utf-8'))
@@ -317,7 +318,7 @@ def then_store_path_under_name(ctx, path, name):
 
 def needs_json(func):
     def inner(ctx, **kwargs):
-        if ctx.zato.request.get('reply_format', ctx.zato.request.format) != 'JSON':
+        if ctx.zato.request.get('reply_format', ctx.zato.request.get('format', 'RAW')) != 'JSON':
             raise TypeError('This step works with JSON replies only.')
         return func(ctx, **kwargs)
     return inner
