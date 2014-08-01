@@ -103,14 +103,23 @@ def given_url_path(ctx, url_path):
 def given_http_method(ctx, method):
     ctx.zato.request.method = method
 
-@given('format "{format}"')
-@util.obtain_values
-def given_format(ctx, format):
+def set_request_format(ctx, format):
     ctx.zato.request.format = format
 
     ctx.zato.request.is_xml = ctx.zato.request.format == 'XML'
     ctx.zato.request.is_json = ctx.zato.request.format == 'JSON'
     ctx.zato.request.is_raw = ctx.zato.request.format == 'RAW'
+
+@given('format "{format}"')
+@util.obtain_values
+def given_format(ctx, format):
+    set_request_format(ctx, format)
+
+@given('request format "{format}"')
+@util.obtain_values
+def given_format(ctx, format):
+    set_request_format(ctx, format)
+
 
 @given('response format "{format}"')
 @util.obtain_values
