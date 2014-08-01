@@ -76,15 +76,15 @@ def when_the_url_is_invoked(ctx, adapters=None):
 
     # if the reply format is unset, assume it's the same as the request format
     # if the request format hasn't been specified either, assume 'RAW"
-    reply_format = ctx.zato.request.get('reply_format', ctx.zato.request.get("format", "RAW"))
+    response_format = ctx.zato.request.get('response_format', ctx.zato.request.get("format", "RAW"))
 
-    if reply_format == 'XML':
+    if response_format == 'XML':
         ctx.zato.response.data_impl = etree.fromstring(ctx.zato.response.data.text.encode('utf-8'))
 
-    elif reply_format == 'JSON':
+    elif response_format == 'JSON':
         ctx.zato.response.data_impl = json.loads(ctx.zato.response.data.text)
 
-    elif reply_format == 'RAW':
+    elif response_format == 'RAW':
         ctx.zato.response.data_impl = ctx.zato.response.data.text
 
 # ################################################################################################################################
@@ -112,10 +112,10 @@ def given_format(ctx, format):
     ctx.zato.request.is_json = ctx.zato.request.format == 'JSON'
     ctx.zato.request.is_raw = ctx.zato.request.format == 'RAW'
 
-@given('reply format "{format}"')
+@given('response format "{format}"')
 @util.obtain_values
-def given_reply_format(ctx, format):
-    ctx.zato.request.reply_format = format
+def given_response_format(ctx, format):
+    ctx.zato.request.response_format = format
 
 
 @given('user agent is "{value}"')
@@ -318,7 +318,7 @@ def then_store_path_under_name(ctx, path, name):
 
 def needs_json(func):
     def inner(ctx, **kwargs):
-        if ctx.zato.request.get('reply_format', ctx.zato.request.get('format', 'RAW')) != 'JSON':
+        if ctx.zato.request.get('response_format', ctx.zato.request.get('format', 'RAW')) != 'JSON':
             raise TypeError('This step works with JSON replies only.')
         return func(ctx, **kwargs)
     return inner
