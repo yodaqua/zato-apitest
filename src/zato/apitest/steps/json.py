@@ -11,6 +11,9 @@ Licensed under LGPLv3, see LICENSE.txt for terms and conditions.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+# base32_crockford
+from base32_crockford import decode as crockford_decode
+
 # Behave
 from behave import given, then
 
@@ -161,3 +164,9 @@ def then_json_pointer_isnt_one_of(ctx, path, value):
     actual = get_pointer(ctx.zato.response.data_impl, path)
     value = util.parse_list(value)
     assert actual not in value, 'Expected for `{}` ({}) not to be in `{}`'.format(actual, path, value)
+
+@then('JSON Pointer "{path}" is a BASE32 Crockford, checksum "{checksum}"')
+@util.obtain_values
+def then_json_pointer_is_a_base32_crockford(ctx, path, checksum):
+    actual = get_pointer(ctx.zato.response.data_impl, path)
+    crockford_decode(actual.replace('-', ''), checksum.lower() == 'true')

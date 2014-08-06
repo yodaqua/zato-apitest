@@ -1,5 +1,6 @@
 argparse==1.2.1
 arrow==0.4.2
+base32-crockford==0.2.0
 behave==1.2.4
 bunch==1.0.1
 click==1.1
