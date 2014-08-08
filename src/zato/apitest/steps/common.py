@@ -13,6 +13,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 # stdlib
 import json
+import time
 
 # Behave
 from behave import given, when, then
@@ -159,6 +160,34 @@ def given_basic_auth(ctx, username, password):
 @util.obtain_values
 def given_i_store_value_under_name(ctx, value, name):
     ctx.zato.user_ctx[name] = value
+
+# ################################################################################################################################
+
+@given('I store a random string under "{name}"')
+@util.obtain_values
+def given_i_store_a_random_string_under_name(ctx, name):
+    ctx.zato.user_ctx[name] = util.rand_string()
+
+# ################################################################################################################################
+
+@given('I store a random integer under "{name}"')
+@util.obtain_values
+def given_i_store_a_random_integer_under_name(ctx, name):
+    ctx.zato.user_ctx[name] = util.rand_int()
+
+# ################################################################################################################################
+
+@given('I store a random float under "{name}"')
+@util.obtain_values
+def given_i_store_a_random_float_under_name(ctx, name):
+    ctx.zato.user_ctx[name] = util.rand_float()
+
+# ################################################################################################################################
+
+@given('I store a random date under "{name}", format "{format}"')
+@util.obtain_values
+def given_i_store_a_random_date_under_name(ctx, name, format):
+    ctx.zato.user_ctx[name] = util.rand_date(ctx.zato.date_formats[format])
 
 # ################################################################################################################################
 
@@ -320,3 +349,10 @@ def then_response_is_equal_to_that_from(ctx, path):
 @util.obtain_values
 def then_response_is_equal_to(ctx, expected):
     return json_response_is_equal_to(ctx, json.loads(expected))
+
+# ################################################################################################################################
+
+@then('I sleep for "{sleep_time}"')
+@util.obtain_values
+def then_i_sleep_for(ctx, sleep_time):
+    time.sleep(float(sleep_time))
