@@ -60,7 +60,9 @@ class GivenTestCase(TestCase):
     def test_then_sql_is_equal_to_value_using_conn_name(self):
         q = 'SELECT name FROM TestDb'
         compare_to = str(util.rand_string(2))
-        self.assertRaises(AssertionError, sql.then_sql_is_equal_to_value_using_conn_name,self.ctx, q, compare_to, self.general_conn)
+        self.assertRaises(
+            AssertionError, sql.then_sql_is_equal_to_value_using_conn_name,self.ctx, q, compare_to, self.general_conn
+            )
 
     def test_given_i_store_sql_under_name_single_elem_list(self):
         q = 'SELECT name FROM TestDb'
