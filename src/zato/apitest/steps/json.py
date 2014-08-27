@@ -170,3 +170,26 @@ def then_json_pointer_isnt_one_of(ctx, path, value):
 def then_json_pointer_is_a_base32_crockford(ctx, path, checksum):
     actual = get_pointer(ctx.zato.response.data_impl, path)
     crockford_decode(actual.replace('-', ''), checksum.lower() == 'true')
+
+# ###############################################################################################################################
+
+@then('JSON Pointer "{path}" is True')
+@util.obtain_values
+def then_json_pointer_is_true(ctx, path):
+    return assert_value(ctx, path, True)
+
+@then('JSON Pointer "{path}" is False')
+@util.obtain_values
+def then_json_pointer_is_false(ctx, path):
+    return assert_value(ctx, path, False)
+
+@then('JSON Pointer "{path}" is an empty list')
+@util.obtain_values
+def then_json_pointer_is_an_empty_list(ctx, path):
+    return assert_value(ctx, path, [])
+
+@then('JSON Pointer "{path}" isn\'t a string "{value}"')
+@util.obtain_values
+def then_json_pointer_isnt_a_string(ctx, path, value):
+    actual = get_pointer(ctx.zato.response.data_impl, path)
+    assert actual != value, 'Expected `{}` != `{}`'.format(actual, value)
