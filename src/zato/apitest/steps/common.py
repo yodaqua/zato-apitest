@@ -356,3 +356,10 @@ def then_response_is_equal_to(ctx, expected):
 @util.obtain_values
 def then_i_sleep_for(ctx, sleep_time):
     time.sleep(float(sleep_time))
+    
+# ################################################################################################################################
+
+@given('I encode "{value}" using Base64 under "{name}"')
+@util.obtain_values
+def given_i_encode_value_using_base64_under_name(ctx, value, name):
+    ctx.zato.user_ctx[name] = value.encode('base64','strict')
