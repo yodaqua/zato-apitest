@@ -13,6 +13,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 # stdlib
 import ast
+from itertools import izip_longest
 
 # Behave
 from behave import given, then
@@ -94,3 +95,53 @@ def and_variable_is_true(ctx, variable):
 @util.obtain_values
 def and_variable_is_false(ctx, variable):
     variable_is(variable, 'False')
+
+# ###############################################################################################################################
+def wrap_into_quotes(values):
+    return '\'{}\''.format('\', \''.join(values.split(', ')))
+
+def make_dict(*args):
+    components = []
+    phrases = {}
+    for item in args:
+        components.append([segment for segment in item.split(', ')])
+    for items in izip_longest(*components):
+        phrases[items[0]] = items[1:]
+    return phrases
+
+def build_filter(*args):
+    comparison_operators = {'equal to': '=', 'not equal to': '!=', 'less than': '<', 'more than': '>', 'less or equal to': '<=', 'more or equal to': '>='}
+    filter_dict = make_dict(*args)
+    filter_ = ''
+    for i, key in enumerate(filter_dict.keys()):
+        operator = comparison_operators[filter_dict[key][0]]
+        if i == 0:
+            filter_ += "WHERE %s%s'%s' " % (key, operator, filter_dict[key][1])
+        else:
+            filter_ += "%s %s%s'%s' " % (filter_dict[key][2], key, operator, filter_dict[key][1])
+    return filter_
+
+@then('I insert "{values}" into following columns "{columns}" of "{tablename}", using "{conn_name}"')
+@util.obtain_values
+def then_i_insert_values_into_columns(ctx, tablename, values, columns, conn_name):
+    insert = "INSERT INTO %s (%s) VALUES (%s)" % (tablename, columns, wrap_into_quotes(values))
+    conn_name.execute(insert)
+    return insert
+
+@given('I store filter "{colname}" is "{sign}" "{colvalue}" "{operator}" under "{name}"')
+def i_store_filter_under_name(ctx, colname, sign, colvalue, name, operator=None):
+    criterion = build_filter(colname, sign, colvalue, operator)
+    ctx.zato.user_ctx[name] = criterion
+
+@then('I update "{columns}" of "{tablename}" set "{values}" filter by "{criterion}", using "{conn_name}"')
+@util.obtain_values
+def then_i_update_columns_setting_values(ctx, tablename, columns, values, conn_name, criterion=None):
+    if not criterion:
+        criterion = ''
+    column_value = make_dict(columns, values)
+    conn_name.execute('BEGIN TRANSACTION')
+    for key in column_value.keys():
+        insert = "UPDATE %s SET %s='%s' %s" %(tablename, key, column_value[key][0], criterion)
+        conn_name.execute(insert)
+    conn_name.execute('COMMIT')
+    return insert
