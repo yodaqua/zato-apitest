@@ -14,6 +14,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 # stdlib
 import ast
 from itertools import izip_longest
+from collections import OrderedDict
 
 # Behave
 from behave import given, then
@@ -23,6 +24,8 @@ from sqlalchemy import create_engine
 
 # Zato
 from .. import util
+
+from .insert_csv import main as insert_csv
 
 # ################################################################################################################################
 
@@ -102,25 +105,33 @@ def wrap_into_quotes(values):
 
 def make_dict(*args):
     components = []
-    phrases = {}
+    phrases = OrderedDict()
     for item in args:
         components.append([segment for segment in item.split(', ')])
     for items in izip_longest(*components):
         phrases[items[0]] = items[1:]
     return phrases
 
+comparison_operators = {'equal to': '=',
+                                    'not equal to': '!=',
+                                    'less than': '<',
+                                    'greater than': '>',
+                                    'less or equal to': '<=',
+                                    'greater or equal to': '>='}
+
 def build_filter(*args):
-    comparison_operators = {'equal to': '=', 'not equal to': '!=', 'less than': '<', 'more than': '>', 'less or equal to': '<=', 'more or equal to': '>='}
     filter_dict = make_dict(*args)
     filter_ = ''
     for i, key in enumerate(filter_dict.keys()):
         operator = comparison_operators[filter_dict[key][0]]
+        if filter_dict[key][2] is not None:
+            join = filter_dict[key][2]
         if i == 0:
             filter_ += "WHERE %s%s'%s' " % (key, operator, filter_dict[key][1])
         else:
-            filter_ += "%s %s%s'%s' " % (filter_dict[key][2], key, operator, filter_dict[key][1])
+            filter_ += "%s %s%s'%s' " % (join, key, operator, filter_dict[key][1])
     return filter_
-
+    
 @then('I insert "{values}" into following columns "{columns}" of "{tablename}", using "{conn_name}"')
 @util.obtain_values
 def then_i_insert_values_into_columns(ctx, tablename, values, columns, conn_name):
@@ -139,9 +150,40 @@ def then_i_update_columns_setting_values(ctx, tablename, columns, values, conn_n
     if not criterion:
         criterion = ''
     column_value = make_dict(columns, values)
-    conn_name.execute('BEGIN TRANSACTION')
     for key in column_value.keys():
         insert = "UPDATE %s SET %s='%s' %s" %(tablename, key, column_value[key][0], criterion)
         conn_name.execute(insert)
-    conn_name.execute('COMMIT')
     return insert
+    
+@then('I delete from "{tablename}" where "{criterion}", using "{conn_name}"')
+@util.obtain_values
+def then_i_delete_from_table(ctx, tablename, conn_name, criterion=None):
+    if not criterion:
+        criterion = ''
+    insert = "DELETE FROM %s %s" %(tablename, criterion)
+    conn_name.execute(insert)
+    return insert
+
+# this step's purpose is insertion of data from csv file to existing table; names of columns are taken from the header line of csv file
+@then('I insert data from csv "{filename}" to "{tablename}", using "{conn_name}"')
+@util.obtain_values
+def i_insert_data_from_csv_file(ctx, **kwargs):
+    insert_csv(use_header=1, **kwargs)
+
+# this step's purpose is creation of a new table and insertion of data from csv file upon it; names of columns are automatically generated as col0, col1, col2 and so on
+@then('I create "{tablename}" and insert data from csv "{filename}", using "{conn_name}"')
+@util.obtain_values
+def i_create_table_and_insert_data_from_csv(ctx, **kwargs):
+    insert_csv(use_types='default', **kwargs)
+
+# this step's purpose is creation of a new table and insertion of data from csv file upon it; data types and names of columns are taken from the header line of csv file
+@then('I create "{tablename}" and insert data from csv "{filename}", using "{conn_name}" and names, data types from the header')
+@util.obtain_values
+def i_create_table_and_insert_data_from_csv_file_using_types_and_header(ctx, **kwargs):
+    insert_csv(use_header=1, use_types=1, **kwargs)
+
+# this step's purpose is creation of a new table and insertion of data from csv file upon it; names of columns are taken from the header line of csv file and data types are from dedicated line below the header
+@then('I create "{tablename}" and insert data from csv "{filename}", using "{conn_name}", names from the header and data types from the line below')
+@util.obtain_values
+def i_create_table_and_insert_data_from_csv_file_using_header(ctx, **kwargs):
+    insert_csv(use_header=1, use_types=0, **kwargs)
