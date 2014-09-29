@@ -16,3 +16,4 @@ from . import json # noqa
 from . import xml # noqa
 from . import sql # noqa
 from . import insert_csv # noqa
+from . import cassandra_ # noqa
