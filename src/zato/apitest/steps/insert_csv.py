@@ -40,9 +40,9 @@ class CSVFile(object):
     def __init__(self, filename, strip=True):
 
         sniffer = csv.Sniffer() # sniff delimiter 
-        f = open(filename, 'rb')
-        dialect = sniffer.sniff(f.readline())
-        f.seek(0)
+        sample = open(filename, 'rb')
+        dialect = sniffer.sniff(sample.readline())
+        sample.seek(0)
 
         self.reader = csv.reader(open(filename, 'rb'),
                                  delimiter=dialect.delimiter,
