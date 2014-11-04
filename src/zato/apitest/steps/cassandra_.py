@@ -15,7 +15,7 @@ from collections import OrderedDict
 # Behave
 from behave import given, then
 
-# cassnadra
+# Cassandra
 from cassandra.cluster import Cluster
 
 # Zato
@@ -119,8 +119,10 @@ def then_i_disconnect_from_cassandra(ctx, conn_name):
 @util.obtain_values
 def then_i_insert_values_into_columns_of_cassandra_table(ctx, tablename, values, columns, conn_name):
     cols = columns.split(',')
+
     if len(cols) != len(values.split(',')):
-        raise SystemExit("Error: invalid number of column names and values.")
+        raise ValueError("Error: invalid number of column names and values.")
+
     value_types = TypeConverter(values).types
     insert = "INSERT INTO %s (%s) VALUES (%s)" % (
         tablename, ','.join('%s' % (x.strip()).rstrip() for x in cols), ','.join('%s' % x for x in value_types))
@@ -142,7 +144,7 @@ def then_i_delete_from_cassandra_table(ctx, tablename, conn_name, criterion=None
     insert = "DELETE FROM %s %s" %(tablename, criterion)
     conn_name.execute(insert)
 
-@then('I insert data from csv "{filename}" to Cassandra table "{tablename}", using "{session}"')
+@then('I insert data from CSV "{filename}" to Cassandra table "{tablename}", using "{session}"')
 @util.obtain_values
 def i_insert_data_from_csv_file_to_cassandra_table(ctx, filename, tablename, session):
     csvf = insert_csv(filename)

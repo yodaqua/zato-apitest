@@ -128,8 +128,8 @@ def create_table(conn_name, table_statement):
     conn_name.execute(table_statement)
 
 def insert_from_csv(conn_name, csv, table, cols, types=None):
-    nbcols = len(cols)
-    insert_stmt = """INSERT INTO %s (%s) VALUES (%s)""" % (table, ','.join('"%s"' % x for x in cols), ','.join(['%s']*nbcols))
+    len_cols = len(cols)
+    insert_stmt = """INSERT INTO %s (%s) VALUES (%s)""" % (table, ','.join('"%s"' % x for x in cols), ','.join(['%s'] * len_cols))
 
     def get_conversion(t):
         if isinstance(t, tuple):
@@ -143,13 +143,13 @@ def insert_from_csv(conn_name, csv, table, cols, types=None):
         converters = map(get_conversion, types)
         for row in csv:
             values = [conv(val) for conv, val in izip(converters, row)]
-            values.extend([None] * (nbcols - len(values)))
+            values.extend([None] * (len_cols - len(values)))
             insert = insert_stmt % (tuple((wrap_into_quotes(element)) for element in values))
             conn_name.execute(insert)
     else:
         for row in csv:
             values = [val for val in row]
-            values.extend([None] * (nbcols - len(values)))
+            values.extend([None] * (len_cols - len(values)))
             insert = insert_stmt % (tuple((wrap_into_quotes(element)) for element in values))
             conn_name.execute(insert)
 
@@ -157,12 +157,15 @@ def main(filename, tablename, conn_name, use_header=None, use_types=None):
     csvf = CSVFile(filename)
     cols = parse_columns(csvf, use_header)
     if use_types is not None:
+
         # use_types=default: all columns data type is 'text'
         # use_types=0: data types in dedicated line below the header line
         # use_types=1: data types beside column names
+
         types = parse_types(csvf, use_types)
         if len(cols) != len(types):
-            raise SystemExit("Error: invalid number of column names and types.")
+            raise ValueError("Error: invalid number of column names and types.")
+
         coltypes = zip(cols, types)
         table_statement = prepare_table(conn_name, tablename, coltypes)
         create_table(conn_name, table_statement)
