@@ -13,8 +13,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 # stdlib
 from httplib import BAD_REQUEST
-from unittest import TestCase
 from StringIO import StringIO
+from unittest import TestCase
 
 # Bunch
 from bunch import Bunch
@@ -51,19 +51,18 @@ class GivenTestCase(TestCase):
         password = util.rand_string()
         zato_.given_i_store_zato_info_under_conn_name(self.ctx, cluster_id, url_path, username, password, conn_name)
         stored = self.ctx.zato.user_ctx[conn_name]
-        # self.assertEquals(stored['cluster_id'], cluster_id)
-        # self.assertEquals(stored['url_path'], url_path)
-        # self.assertEquals(stored['username'], username)
-        # self.assertEquals(stored['password'], password)
+
         for key in stored:
             self.assertEquals(stored[key], eval(key))
 
     def test_when_i_upload_a_zato_service_from_path_to_conn_details_fails(self):
         file_mock = MagicMock(spec=file)
         file_mock.__enter__.return_value = StringIO(self.fake_service_code)
+
         with patch('__builtin__.open', create=True) as mock_open:
             mock_open.return_value = file_mock
             with patch('requests.get') as mock_requests:
                 mock_requests.return_value = mock_response = Mock()
                 mock_response.status_code = BAD_REQUEST
-                self.assertRaises(AssertionError, zato_.when_i_upload_a_zato_service_from_path_to_conn_details,self.ctx, './abc', self.stored)
+                self.assertRaises(
+                    AssertionError, zato_.when_i_upload_a_zato_service_from_path_to_conn_details,self.ctx, './abc', self.stored)

@@ -12,9 +12,9 @@ Licensed under LGPLv3, see LICENSE.txt for terms and conditions.
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 # stdlib
+from httplib import OK
 import json
 from os.path import split
-from httplib import OK
 
 # requests
 import requests
@@ -42,14 +42,10 @@ def given_i_store_zato_info_under_conn_name(ctx, cluster_id, url_path, username,
 def when_i_upload_a_zato_service_from_path_to_conn_details(ctx, module_path, conn_name):
     with open(module_path, 'r') as module:
         service_code = module.read().encode('base64', 'strict')
-        payload = json.dumps(
-            {
-            'cluster_id': conn_name['cluster_id'],
-            'payload': service_code,
+        payload = json.dumps({
+            'cluster_id': conn_name['cluster_id'],'payload': service_code,
             'payload_name': split(module_path)[-1]
-            },ensure_ascii=False)
+            }, ensure_ascii=False)
 
-        upload = requests.get(
-            conn_name['url_path'], auth=(conn_name['username'], conn_name['password']), data=payload
-            )
-        assert upload.status_code == OK
+        response = requests.get(conn_name['url_path'], auth=(conn_name['username'], conn_name['password']), data=payload)
+        assert response.status_code == OK
