@@ -324,6 +324,11 @@ applies to step names, variables, functions, anything. This is a system name res
 Changelog
 ---------
 
+* **1.2** - 04-10-2014
+
+  * Added SQL
+  * Added Cassandra
+
 * **1.1** - 26-06-2014
 
   * Added HTTP Basic Auth
