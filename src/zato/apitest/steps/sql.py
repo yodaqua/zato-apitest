@@ -67,8 +67,10 @@ def i_store_filter_under_name(ctx, colname, sign, colvalue, name, operator=None)
 @then('I insert "{values}" into "{columns}" of SQL table "{tablename}", using "{conn_name}"')
 @util.obtain_values
 def then_i_insert_values_into_columns(ctx, tablename, values, columns, conn_name):
+
     if len(columns.split(', ')) != len(values.split(', ')):
-        raise SystemExit("Error: invalid number of column names and values.")
+        raise ValueError("Error: invalid number of column names and values.")
+
     insert = "INSERT INTO %s (%s) VALUES (%s)" % (tablename, columns, util.wrap_into_quotes(values))
     conn_name.execute(insert)
     return insert
