@@ -13,7 +13,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 # stdlib
 import csv, operator, os, random, uuid
+from collections import OrderedDict
 from datetime import timedelta
+from itertools import izip_longest
 
 # Arrow
 from arrow import api as arrow_api
@@ -82,6 +84,7 @@ def new_context(old_ctx, environment_dir, user_config=None):
     _context.request.ns_map = {}
     _context.user_config = user_config if user_config is not None else bunchify(
         ConfigObj(os.path.join(_context.environment_dir, 'config.ini')))['user']
+    _context.cassandra_ctx = {}
 
     context.clear()
     context.update(_context)
@@ -169,3 +172,35 @@ def date_between(start_date, end_date, format):
     return func(start_date, format, diff, False)
 
 # ################################################################################################################################
+
+comparison_operators = {'equal to': '=',
+                        'not equal to': '!=',
+                        'less than': '<',
+                        'greater than': '>',
+                        'less or equal to': '<=',
+                        'greater or equal to': '>='}
+                                    
+def wrap_into_quotes(values):
+    return '\'{}\''.format('\', \''.join(values.split(', ')))
+
+def make_dict(*args):
+    components = []
+    phrases = OrderedDict()
+    for item in args:
+        components.append([segment.strip() for segment in item.split(',')])
+    for items in izip_longest(*components):
+        phrases[items[0]] = items[1:]
+    return phrases
+
+def build_filter(*args):
+    filter_dict = make_dict(*args)
+    filter_ = ''
+    for i, key in enumerate(filter_dict.keys()):
+        operator = comparison_operators[filter_dict[key][0]]
+        if filter_dict[key][2] is not None:
+            join_by = filter_dict[key][2]
+        if i == 0:
+            filter_ += "WHERE %s%s'%s' " % (key, operator, filter_dict[key][1])
+        else:
+            filter_ += "%s %s%s'%s' " % (join_by, key, operator, filter_dict[key][1])
+    return filter_
