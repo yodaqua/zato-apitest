@@ -19,13 +19,15 @@ from unittest import TestCase
 # Bunch
 from bunch import Bunch
 
+# SQLAlchemy
+from sqlalchemy.engine.base import Connection
+
 # sqlite3
 import sqlite3
-from sqlalchemy.engine.base import Connection
 
 # Zato
 from zato.apitest import util
-from zato.apitest.steps import sql
+from zato.apitest.steps import common, sql
 
 # ###############################################################################################################################
 
@@ -82,39 +84,39 @@ class GivenTestCase(TestCase):
     def test_variable_is(self):
         variable = str(util.rand_string(2))
         value = str(util.rand_string(2))
-        self.assertRaises(AssertionError, sql.variable_is, variable, value)
+        self.assertRaises(AssertionError, common.variable_is, variable, value)
         
     def test_and_variable_is_a_list(self):
         variable = str([util.rand_string(2)])
         value = str([util.rand_string(2)])
-        self.assertRaises(AssertionError, sql.and_variable_is_a_list, self.ctx, variable, value)
+        self.assertRaises(AssertionError, common.and_variable_is_a_list, self.ctx, variable, value)
 
     def test_and_variable_is_a_emptyn_list(self):
         variable = str([util.rand_string(2)])
-        self.assertRaises(AssertionError, sql.and_variable_is_an_empty_list, self.ctx, variable)
+        self.assertRaises(AssertionError, common.and_variable_is_an_empty_list, self.ctx, variable)
 
     def test_and_variable_is_an_integer(self):
         variable = str(1)
         value = str([util.rand_string(2)])
-        self.assertRaises(AssertionError, sql.and_variable_is_an_integer, self.ctx, variable, value)
+        self.assertRaises(AssertionError, common.and_variable_is_an_integer, self.ctx, variable, value)
         
     def test_and_variable_is_a_float(self):
         variable = str(1)
         value = str([util.rand_string(2)])
-        self.assertRaises(AssertionError, sql.and_variable_is_a_float, self.ctx, variable, value)
+        self.assertRaises(AssertionError, common.and_variable_is_a_float, self.ctx, variable, value)
 
     def test_and_variable_is_a_string(self):
         variable = str(1)
         value = str([util.rand_string(2)])
-        self.assertRaises(AssertionError, sql.and_variable_is_a_string, self.ctx, variable, value)
+        self.assertRaises(AssertionError, common.and_variable_is_a_string, self.ctx, variable, value)
 
     def test_and_variable_is_true(self):
         variable = "False"
-        self.assertRaises(AssertionError, sql.and_variable_is_true, self.ctx, variable)
+        self.assertRaises(AssertionError, common.and_variable_is_true, self.ctx, variable)
 
     def test_and_variable_is_false(self):
         variable = "True"
-        self.assertRaises(AssertionError, sql.and_variable_is_false, self.ctx, variable)
+        self.assertRaises(AssertionError, common.and_variable_is_false, self.ctx, variable)
 
     def tearDown(self):
         self.conn.close()

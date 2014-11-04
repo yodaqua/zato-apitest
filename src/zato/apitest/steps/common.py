@@ -12,6 +12,7 @@ Licensed under LGPLv3, see LICENSE.txt for terms and conditions.
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 # stdlib
+import ast
 import json
 import time
 
@@ -363,3 +364,44 @@ def then_i_sleep_for(ctx, sleep_time):
 @util.obtain_values
 def given_i_encode_value_using_base64_under_name(ctx, value, name):
     ctx.zato.user_ctx[name] = value.encode('base64','strict')
+
+# ################################################################################################################################
+
+def variable_is(variable, value):
+    expected_value = ast.literal_eval(value)
+    assert variable == expected_value, 'Value `{}` is not equal to expected `{}`'.format(variable, expected_value)
+
+@then('variable "{variable}" is a list "{value}"')
+@util.obtain_values
+def and_variable_is_a_list(ctx, variable, value):
+    variable_is(variable, value)
+
+@then('variable "{variable}" is an empty list')
+@util.obtain_values
+def and_variable_is_an_empty_list(ctx, variable):
+    assert variable == [], 'Value `{}` is not an empty list'.format(variable)
+
+@then('variable "{variable}" is an integer "{value}"')
+@util.obtain_values
+def and_variable_is_an_integer(ctx, variable, value):
+    variable_is(variable, value)
+
+@then('variable "{variable}" is a float "{value}"')
+@util.obtain_values
+def and_variable_is_a_float(ctx, variable, value):
+    variable_is(variable, value)
+
+@then('variable "{variable}" is a string "{value}"')
+@util.obtain_values
+def and_variable_is_a_string(ctx, variable, value):
+    assert variable == value, 'Value `{}` is not equal to expected `{}`'.format(variable, value)
+
+@then('variable "{variable}" is True')
+@util.obtain_values
+def and_variable_is_true(ctx, variable):
+    variable_is(variable, 'True')
+
+@then('variable "{variable}" is False')
+@util.obtain_values
+def and_variable_is_false(ctx, variable):
+    variable_is(variable, 'False')
