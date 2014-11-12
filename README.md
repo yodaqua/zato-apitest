@@ -50,7 +50,20 @@ Download and install
 --------------------
 
 Newest releases are always available [on PyPI] (https://pypi.python.org/pypi/zato-apitest)
-and can be installed with [pip] (https://pip.pypa.io/en/latest/installing.html).
+and can be installed with [pip] (https://pip.pypa.io/en/latest/installing.html) after installing a few system prequisites:
+
+* PostgreSQL development libraries
+* XML development-related libraries
+* Python headers
+* YAML headers
+
+For instance, on Debian/Ubuntu:
+
+```bash
+$ sudo apt-get install -y libpq-dev libxml2-dev libxslt1-dev python-dev libyaml-dev
+```
+
+Now, on to zato-apitest:
 
 ```bash
 $ sudo pip install zato-apitest
@@ -323,6 +336,10 @@ applies to step names, variables, functions, anything. This is a system name res
 
 Changelog
 ---------
+
+* **1.3** - 12-10-2014
+
+  * Fixed installation issues with pip
 
 * **1.2** - 04-10-2014
 
