@@ -19,4 +19,4 @@ from zato.apitest import version
 
 class TopLevelModuleTestCase(TestCase):
     def test_version(self):
-        self.assertEquals('1.2', version)
+        self.assertEquals('1.4', version)

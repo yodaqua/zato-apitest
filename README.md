@@ -337,6 +337,10 @@ applies to step names, variables, functions, anything. This is a system name res
 Changelog
 ---------
 
+* **1.4** - 21-10-2014
+
+  * Fixed inconsistent release number with 1.3
+
 * **1.3** - 12-10-2014
 
   * Fixed installation issues with pip
