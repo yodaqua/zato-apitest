@@ -92,28 +92,34 @@ def given_cassandra_protocol_version(ctx, protocol_version):
 def given_cassandra_port(ctx, port):
     ctx.zato.cassandra_ctx['port'] = int(port)
 
-@given('I connect to keyspace "{keyspace}" as "{session_name}"')
+@given('I connect to keyspace "{keyspace}" as "{conn_name}"')
 @util.obtain_values
-def given_i_connect_to_keyspace_as_session(ctx, keyspace, session_name):
+def given_i_connect_to_keyspace_as_session(ctx, keyspace, conn_name):
     if len(ctx.zato.cassandra_ctx) > 0:
         cluster = Cluster(**ctx.zato.cassandra_ctx)
     else:
         cluster = Cluster()
     session = cluster.connect(keyspace)
-    ctx.zato.user_ctx[session_name] = session
+    ctx.zato.user_ctx[conn_name] = session
 
-@given('I store CQL query result "{cql}" under "{name}", using "{conn_name}"')
+@given('I store CQL query result "{cql}" under "{name}", using "{conn_name}", idx "{idx}"')
 @util.obtain_values
-def given_i_store_cql_query_result_under_name(ctx, cql, name, conn_name):
-    result = conn_name.execute(cql)
-    ctx.zato.user_ctx[name] = result
+def given_i_store_cql_query_result_under_name(ctx, cql, name, conn_name, idx):
+    result = ctx.zato.user_ctx[conn_name].execute(cql)[int(idx)]
+    result = result._asdict()
+
+    values = []
+    for k, v in result.items():
+        values.append(v)
+
+    ctx.zato.user_ctx[name] = ';'.join(values)
 
 # ###############################################################################################################################
 
 @then('I disconnect from Cassandra "{conn_name}"')
 @util.obtain_values
 def then_i_disconnect_from_cassandra(ctx, conn_name):
-    conn_name.shutdown()
+    ctx.zato.user_ctx[conn_name].shutdown()
 
 @then('I insert "{values}" into "{columns}" of Cassandra table "{tablename}", using "{conn_name}"')
 @util.obtain_values
@@ -126,27 +132,27 @@ def then_i_insert_values_into_columns_of_cassandra_table(ctx, tablename, values,
     value_types = TypeConverter(values).types
     insert = "INSERT INTO %s (%s) VALUES (%s)" % (
         tablename, ','.join('%s' % (x.strip()).rstrip() for x in cols), ','.join('%s' % x for x in value_types))
-    conn_name.execute(insert)
+    ctx.zato.user_ctx[conn_name].execute(insert)
 
 @then('I update "{columns}" of Cassandra table "{tablename}" set "{values}" filter by "{criterion}", using "{conn_name}"')
 @util.obtain_values
 def then_i_update_columns_of_cassandra_table_setting_values(ctx, tablename, columns, values, conn_name, criterion):
     column_value = util.make_dict(columns, values)
     for key in column_value.keys():
-        insert = "UPDATE %s SET %s='%s' %s" %(tablename, key, column_value[key][0], criterion)
-        conn_name.execute(insert)
+        insert = "UPDATE %s SET %s='%s' %s" % (tablename, key, column_value[key][0], criterion)
+        ctx.zato.user_ctx[conn_name].execute(insert)
 
 @then('I delete from Cassandra table "{tablename}" where "{criterion}", using "{conn_name}"')
 @util.obtain_values
 def then_i_delete_from_cassandra_table(ctx, tablename, conn_name, criterion=None):
     if not criterion:
         criterion = ''
-    insert = "DELETE FROM %s %s" %(tablename, criterion)
-    conn_name.execute(insert)
+    insert = "DELETE FROM %s %s" % (tablename, criterion)
+    ctx.zato.user_ctx[conn_name].execute(insert)
 
-@then('I insert data from CSV "{filename}" to Cassandra table "{tablename}", using "{session}"')
+@then('I insert data from CSV "{filename}" to Cassandra table "{tablename}", using "{conn_name}"')
 @util.obtain_values
-def i_insert_data_from_csv_file_to_cassandra_table(ctx, filename, tablename, session):
+def i_insert_data_from_csv_file_to_cassandra_table(ctx, filename, tablename, conn_name):
     csvf = insert_csv(filename)
     colnames = [item for item in csvf.next()]
     statement = "INSERT INTO %s (%s) VALUES (%s)"
@@ -154,4 +160,4 @@ def i_insert_data_from_csv_file_to_cassandra_table(ctx, filename, tablename, ses
         value_types = TypeConverter(','.join(row)).types
         data = (tablename, ','.join('%s' % (s.strip()).rstrip() for s in colnames), ','.join('%s' % v for v in value_types))
         insert = statement % data
-        session.execute(insert)
+        ctx.zato.user_ctx[conn_name].execute(insert)
