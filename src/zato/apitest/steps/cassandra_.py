@@ -105,12 +105,16 @@ def given_i_connect_to_keyspace_as_session(ctx, keyspace, conn_name):
 @given('I store CQL query result "{cql}" under "{name}", using "{conn_name}", idx "{idx}"')
 @util.obtain_values
 def given_i_store_cql_query_result_under_name(ctx, cql, name, conn_name, idx):
-    result = ctx.zato.user_ctx[conn_name].execute(cql)[int(idx)]
-    result = result._asdict()
 
     values = []
-    for k, v in result.items():
-        values.append(v)
+    result = ctx.zato.user_ctx[conn_name].execute(cql)
+
+    if result:
+        result = result[int(idx)]
+        result = result._asdict()
+
+        for k, v in result.items():
+            values.append(v)
 
     ctx.zato.user_ctx[name] = ';'.join(values)
 

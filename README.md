@@ -337,6 +337,10 @@ applies to step names, variables, functions, anything. This is a system name res
 Changelog
 ---------
 
+* **1.6** - 01-12-2014
+
+  * Fixed Cassandra test cases
+
 * **1.5** - 01-12-2014
 
   * Fixed Cassandra queries not being submitted

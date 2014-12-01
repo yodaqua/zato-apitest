@@ -56,7 +56,7 @@ class EmbeddedCassandraTestCase(TestCase):
         self.session.execute(table_statement)
         self.cluster.shutdown()
 
-        # setup Cassamdra ctx
+        # setup Cassandra ctx
         cassandra_.given_cassandra_contact_points(self.ctx, 'localhost')
         cassandra_.given_cassandra_protocol_version(self.ctx, 1)
         cassandra_.given_cassandra_port(self.ctx, '9042')
@@ -72,47 +72,40 @@ class CassandraTestCase(EmbeddedCassandraTestCase):
         self.assertEquals(type(current_session), type(self.session))
 
     def test_then_i_insert_values_into_columns_of_cassandra_table(self):
-        current_session = self.ctx.zato.user_ctx[self.current_session_name]
         cassandra_.then_i_insert_values_into_columns_of_cassandra_table(
-            self.ctx, self.table, ', '.join(self.values), ', '.join(self.columns), current_session)
+            self.ctx, self.table, ', '.join(self.values), ', '.join(self.columns), self.current_session_name)
 
         statement = "SELECT * FROM %s" % self.table
-        cassandra_.given_i_store_cql_query_result_under_name(self.ctx, statement, 'cql_result', current_session)
-        self.assertEquals(self.ctx.zato.user_ctx['cql_result'][0][0], self.values[0])
-        self.assertEquals(self.ctx.zato.user_ctx['cql_result'][0][0:], tuple((item) for item in self.values))
+        cassandra_.given_i_store_cql_query_result_under_name(self.ctx, statement, 'cql_result', self.current_session_name, 0)
+        self.assertEquals(self.ctx.zato.user_ctx['cql_result'], ';'.join(self.values))
 
     def test_then_i_update_columns_of_cassandra_table_setting_values(self):
         new_values = 'John, Doe'
-        current_session = self.ctx.zato.user_ctx[self.current_session_name]
         criterion = "WHERE %s='%s'" % (self.columns[0], self.values[0])
         cassandra_.then_i_update_columns_of_cassandra_table_setting_values(
-            self.ctx, self.table, ', '.join(self.columns[1:]), new_values, current_session, criterion)
+            self.ctx, self.table, ', '.join(self.columns[1:]), new_values, self.current_session_name, criterion)
 
         statement = "SELECT * FROM %s" % self.table
-        cassandra_.given_i_store_cql_query_result_under_name(self.ctx, statement, 'cql_result', current_session)
-        self.assertEquals(self.ctx.zato.user_ctx['cql_result'][0][0], self.values[0])
-        self.assertEquals(self.ctx.zato.user_ctx['cql_result'][0][1], 'John')
-        self.assertEquals(self.ctx.zato.user_ctx['cql_result'][0][2], 'Doe')
+        cassandra_.given_i_store_cql_query_result_under_name(self.ctx, statement, 'cql_result', self.current_session_name, 0)
+        self.assertEquals(self.ctx.zato.user_ctx['cql_result'], '{};John;Doe'.format(self.values[0]))
 
     def test_then_i_delete_from_cassandra_table(self):
-        current_session = self.ctx.zato.user_ctx[self.current_session_name]
         criterion = "WHERE %s='%s'" % (self.columns[0], self.values[0])
-        cassandra_.then_i_delete_from_cassandra_table(self.ctx, self.table, current_session, criterion)
+        cassandra_.then_i_delete_from_cassandra_table(self.ctx, self.table, self.current_session_name, criterion)
 
         statement = "SELECT * FROM %s" % self.table
-        cassandra_.given_i_store_cql_query_result_under_name(self.ctx, statement, 'cql_result', current_session)
-        self.assertEquals(self.ctx.zato.user_ctx['cql_result'], [])
+        cassandra_.given_i_store_cql_query_result_under_name(self.ctx, statement, 'cql_result', self.current_session_name, 0)
+        self.assertEquals(self.ctx.zato.user_ctx['cql_result'], '')
 
     @patch('__builtin__.open')
     def test_i_insert_data_from_csv_file_to_cassandra_table(self, open_mock):
-        current_session = self.ctx.zato.user_ctx[self.current_session_name]
         values = (util.rand_string(), util.rand_string(), util.rand_string())
         fake_csv = 'userid, fname, sname\n%s, %s, %s' % values
         filename = util.rand_string()
 
         open_mock.return_value = StringIO(fake_csv)
-        cassandra_.i_insert_data_from_csv_file_to_cassandra_table(self.ctx, filename, self.table, current_session)
+        cassandra_.i_insert_data_from_csv_file_to_cassandra_table(self.ctx, filename, self.table, self.current_session_name)
 
         statement = "SELECT * FROM %s" % self.table
-        cassandra_.given_i_store_cql_query_result_under_name(self.ctx, statement, 'cql_result', current_session)
-        self.assertEquals(self.ctx.zato.user_ctx['cql_result'][0][0:], values)
+        cassandra_.given_i_store_cql_query_result_under_name(self.ctx, statement, 'cql_result', self.current_session_name, 0)
+        self.assertEquals(self.ctx.zato.user_ctx['cql_result'], ';'.join(values))
