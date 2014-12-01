@@ -8,8 +8,8 @@ Licensed under LGPLv3, see LICENSE.txt for terms and conditions.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-# stdlib imports
-import csv, re
+# stdlib
+import csv, os, re
 from datetime import date, datetime
 from itertools import izip
 from time import strptime
@@ -37,7 +37,10 @@ type_convert = {'integer': int,
                'datetime': str2datetime}
 
 class CSVFile(object):
-    def __init__(self, filename, strip=True):
+    def __init__(self, filename, ctx=None, strip=True):
+
+        if ctx and not os.path.isabs(filename):
+            filename = os.path.join(ctx.zato.environment_dir, filename)
 
         sniffer = csv.Sniffer() # sniff delimiter 
         sample = open(filename, 'rb')

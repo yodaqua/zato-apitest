@@ -21,7 +21,7 @@ from cassandra.cluster import Cluster
 # Zato
 from .. import util
 
-from .insert_csv import CSVFile as insert_csv
+from .insert_csv import CSVFile
 
 # ################################################################################################################################
 
@@ -118,6 +118,18 @@ def given_i_store_cql_query_result_under_name(ctx, cql, name, conn_name, idx):
 
     ctx.zato.user_ctx[name] = ';'.join(values)
 
+@given('I insert data from CSV "{filename}" to Cassandra table "{tablename}", using "{conn_name}"')
+@util.obtain_values
+def i_insert_data_from_csv_file_to_cassandra_table(ctx, filename, tablename, conn_name):
+    csvf = CSVFile(filename, ctx)
+    colnames = [item for item in csvf.next()]
+    statement = "INSERT INTO %s (%s) VALUES (%s)"
+    for row in csvf:
+        value_types = TypeConverter(','.join(row)).types
+        data = (tablename, ','.join('%s' % (s.strip()).rstrip() for s in colnames), ','.join('%s' % v for v in value_types))
+        insert = statement % data
+        ctx.zato.user_ctx[conn_name].execute(insert)
+
 # ###############################################################################################################################
 
 @then('I disconnect from Cassandra "{conn_name}"')
@@ -153,15 +165,3 @@ def then_i_delete_from_cassandra_table(ctx, tablename, conn_name, criterion=None
         criterion = ''
     insert = "DELETE FROM %s %s" % (tablename, criterion)
     ctx.zato.user_ctx[conn_name].execute(insert)
-
-@then('I insert data from CSV "{filename}" to Cassandra table "{tablename}", using "{conn_name}"')
-@util.obtain_values
-def i_insert_data_from_csv_file_to_cassandra_table(ctx, filename, tablename, conn_name):
-    csvf = insert_csv(filename)
-    colnames = [item for item in csvf.next()]
-    statement = "INSERT INTO %s (%s) VALUES (%s)"
-    for row in csvf:
-        value_types = TypeConverter(','.join(row)).types
-        data = (tablename, ','.join('%s' % (s.strip()).rstrip() for s in colnames), ','.join('%s' % v for v in value_types))
-        insert = statement % data
-        ctx.zato.user_ctx[conn_name].execute(insert)
