@@ -78,7 +78,7 @@ def when_the_url_is_invoked(ctx, adapters=None):
 
     # if the reply format is unset, assume it's the same as the request format
     # if the request format hasn't been specified either, assume 'RAW"
-    response_format = ctx.zato.request.get('response_format', ctx.zato.request.get("format", "RAW"))
+    response_format = ctx.zato.request.get('response_format', ctx.zato.request.get('format', 'RAW'))
 
     if response_format == 'XML':
         ctx.zato.response.data_impl = etree.fromstring(ctx.zato.response.data.text.encode('utf-8'))
@@ -119,15 +119,13 @@ def given_format(ctx, format):
 
 @given('request format "{format}"')
 @util.obtain_values
-def given_format(ctx, format):
+def given_request_format(ctx, format):
     set_request_format(ctx, format)
-
 
 @given('response format "{format}"')
 @util.obtain_values
 def given_response_format(ctx, format):
     ctx.zato.request.response_format = format
-
 
 @given('user agent is "{value}"')
 @util.obtain_values

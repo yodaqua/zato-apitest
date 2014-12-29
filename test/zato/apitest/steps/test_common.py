@@ -76,6 +76,7 @@ class WhenTestCase(TestCase):
 
         ctx.zato.request.is_xml = False
         ctx.zato.request.is_json = True
+        ctx.zato.request.response_format = 'JSON'
         ctx.zato.request.data_impl = data_impl
         ctx.zato.request.method = method
         ctx.zato.request.address = address
