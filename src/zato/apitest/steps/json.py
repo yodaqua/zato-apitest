@@ -130,10 +130,24 @@ def then_json_pointer_is(ctx, path, value):
 def then_json_pointer_is_an_integer(ctx, path, value):
     return assert_value(ctx, path, value, int)
 
+@then('JSON Pointer "{path}" is any integer')
+@util.obtain_values
+def then_json_pointer_is_any_integer(ctx, path):
+    actual = get_pointer(ctx.zato.response.data_impl, path)
+    assert type(actual) == int, 'Expected an integer in {}, got a `{}`'.format(path, type(actual))
+    return True
+
 @then('JSON Pointer "{path}" is a float "{value}"')
 @util.obtain_values
 def then_json_pointer_is_a_float(ctx, path, value):
     return assert_value(ctx, path, value, float)
+
+@then('JSON Pointer "{path}" is any float')
+@util.obtain_values
+def then_json_pointer_is_any_float(ctx, path):
+    actual = get_pointer(ctx.zato.response.data_impl, path)
+    assert type(actual) == float, 'Expected a float in {}, got a `{}`'.format(path, type(actual))
+    return True
 
 @then('JSON Pointer "{path}" is a list "{value}"')
 @util.obtain_values
