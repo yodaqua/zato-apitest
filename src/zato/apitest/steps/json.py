@@ -29,9 +29,9 @@ from .. import INVALID
 
 # Integer types for testing 'JSON Pointer {path} is any integer'
 try:
-    int_types = [int, long]
+    int_types = (int, long)
 except:
-    int_types = [int]     # python 3 doesn't have the long type
+    int_types = (int,)     # python 3 doesn't have the long type
 
 
 # ################################################################################################################################
@@ -141,7 +141,7 @@ def then_json_pointer_is_an_integer(ctx, path, value):
 @util.obtain_values
 def then_json_pointer_is_any_integer(ctx, path):
     actual = get_pointer(ctx.zato.response.data_impl, path)
-    assert any(map(lambda t: isinstance(actual, t), int_types)), \
+    assert isinstance(actual, int_types), \
         'Expected an integer in {}, got a `{}`'.format(path, type(actual))
     return True
 
