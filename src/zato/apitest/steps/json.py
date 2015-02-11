@@ -188,6 +188,11 @@ def then_json_pointer_is_false(ctx, path):
 def then_json_pointer_is_an_empty_list(ctx, path):
     return assert_value(ctx, path, [])
 
+@then('JSON Pointer "{path}" is an empty dict')
+@util.obtain_values
+def then_json_pointer_is_an_empty_dict(ctx, path):
+    return assert_value(ctx, path, {})
+
 @then('JSON Pointer "{path}" isn\'t a string "{value}"')
 @util.obtain_values
 def then_json_pointer_isnt_a_string(ctx, path, value):

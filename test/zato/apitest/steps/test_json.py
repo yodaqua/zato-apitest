@@ -191,6 +191,11 @@ class ThenTestCase(TestCase):
         self.ctx.zato.response.data_impl[path] = util.rand_string(2)
         self.assertRaises(AssertionError, json.then_json_pointer_is_an_empty_list, self.ctx, '/' + path)
 
+    def test_then_json_pointer_is_an_empty_dict(self):
+        path = util.rand_string()
+        self.ctx.zato.response.data_impl[path] = {}
+        self.assertTrue(json.then_json_pointer_is_an_empty_dict(self.ctx, '/' + path))
+
     def test_then_json_pointer_isnt_a_string(self):
         path, value = util.rand_string(2)
         self.ctx.zato.response.data_impl[path] = value
