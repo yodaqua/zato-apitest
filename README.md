@@ -337,6 +337,10 @@ applies to step names, variables, functions, anything. This is a system name res
 Changelog
 ---------
 
+* **1.9** - 18-03-2015
+
+  * Updated dependencies so it's easier to install zato-apitest under virtualenv
+
 * **1.8** - 29-12-2014
 
   * Added RAW requests and responses
