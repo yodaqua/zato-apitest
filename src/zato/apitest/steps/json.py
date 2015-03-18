@@ -27,6 +27,13 @@ from jsonpointer import resolve_pointer as get_pointer, set_pointer as _set_poin
 from .. import util
 from .. import INVALID
 
+# Integer types for testing 'JSON Pointer {path} is any integer'
+try:
+    int_types = (int, long)
+except:
+    int_types = (int,)     # python 3 doesn't have the long type
+
+
 # ################################################################################################################################
 
 def set_pointer(ctx, path, value):
@@ -130,10 +137,26 @@ def then_json_pointer_is(ctx, path, value):
 def then_json_pointer_is_an_integer(ctx, path, value):
     return assert_value(ctx, path, value, int)
 
+@then('JSON Pointer "{path}" is any integer')
+@util.obtain_values
+def then_json_pointer_is_any_integer(ctx, path):
+    actual = get_pointer(ctx.zato.response.data_impl, path)
+    assert isinstance(actual, int_types), \
+        'Expected an integer in {}, got a `{}`'.format(path, type(actual))
+    return True
+
 @then('JSON Pointer "{path}" is a float "{value}"')
 @util.obtain_values
 def then_json_pointer_is_a_float(ctx, path, value):
     return assert_value(ctx, path, value, float)
+
+@then('JSON Pointer "{path}" is any float')
+@util.obtain_values
+def then_json_pointer_is_any_float(ctx, path):
+    actual = get_pointer(ctx.zato.response.data_impl, path)
+    assert isinstance(actual, float), \
+        'Expected a float in {}, got a `{}`'.format(path, type(actual))
+    return True
 
 @then('JSON Pointer "{path}" is a list "{value}"')
 @util.obtain_values
