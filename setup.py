@@ -14,7 +14,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 from setuptools import setup, find_packages
 
-version = '1.8'
+version = '1.9'
 
 LONG_DESCRIPTION = """
 zato-apitest is a friendly command line tool for creating beautiful tests of HTTP-based REST, XML and SOAP APIs with as little
@@ -76,8 +76,10 @@ More details, including plenty of usage examples, demos and screenshots, are `on
 """
 
 def parse_requirements(requirements):
+    ignored = ['#', 'setuptools', '-e']
+
     with open(requirements) as f:
-        return [line.strip('\n') for line in f if line.strip('\n') and not line.startswith('#')]
+        return [line for line in f if line.strip() and not any(line.startswith(prefix) for prefix in ignored)]
 
 setup(
       name = 'zato-apitest',
