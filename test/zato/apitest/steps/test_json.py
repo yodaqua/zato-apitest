@@ -139,9 +139,9 @@ class ThenTestCase(TestCase):
         self.assertRaises(AssertionError, json.then_json_pointer_is, self.ctx, '/' + path, value)
 
     def test_then_json_pointer_is_an_integer(self):
-        path, value = util.rand_string(2)
+        path = util.rand_string()
         value = util.rand_int()
-        self.ctx.zato.response.data_impl[path] = util.rand_int()
+        self.ctx.zato.response.data_impl[path] = value + 1
         self.assertRaises(AssertionError, json.then_json_pointer_is_an_integer, self.ctx, '/' + path, value)
 
     def test_then_json_pointer_is_a_float(self):
@@ -185,7 +185,7 @@ class ThenTestCase(TestCase):
         path = util.rand_string()
         self.ctx.zato.response.data_impl[path] = True
         self.assertRaises(AssertionError, json.then_json_pointer_is_false, self.ctx, '/' + path)
-        
+
     def test_then_json_pointer_is_an_empty_list(self):
         path = util.rand_string()
         self.ctx.zato.response.data_impl[path] = util.rand_string(2)
