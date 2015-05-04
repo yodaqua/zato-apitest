@@ -23,6 +23,10 @@ from datadiff.tools import assert_equals
 # jsonpointer
 from jsonpointer import resolve_pointer as get_pointer, set_pointer as _set_pointer
 
+# json
+from .common import needs_json
+import json
+
 # Zato
 from .. import util
 from .. import INVALID
@@ -131,6 +135,18 @@ def assert_value(ctx, path, value, wrapper=None):
 @util.obtain_values
 def then_json_pointer_is(ctx, path, value):
     return assert_value(ctx, path, value)
+
+@then('JSON Pointer "{path}" is JSON "{value}"')
+@needs_json
+@util.obtain_values
+def then_json_pointer_is_json(ctx, path, value):
+    return assert_value(ctx, path, json.loads(value))
+
+@then('JSON Pointer "{path}" is JSON equal to that from "{value}"')
+@needs_json
+@util.obtain_values
+def then_json_pointer_is_json_equal_to_that_from(ctx, path, value):
+    return assert_value(ctx, path, json.loads(util.get_data(ctx, 'response', value)))
 
 @then('JSON Pointer "{path}" is an integer "{value}"')
 @util.obtain_values
