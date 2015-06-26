@@ -15,6 +15,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import ast
 import json
 import time
+import os
 
 # Behave
 from behave import given, when, then
@@ -48,16 +49,24 @@ def when_the_url_is_invoked(ctx, adapters=None):
     address = ctx.zato.request.get('address')
     url_path = ctx.zato.request.get('url_path', '/')
     qs = ctx.zato.request.get('query_string', '')
+    files = None
+    data = ''
 
     if 'data_impl' in ctx.zato.request:
         if ctx.zato.request.is_xml:
             data = etree.tostring(ctx.zato.request.data_impl)
         elif ctx.zato.request.is_json:
             data = json.dumps(ctx.zato.request.data_impl, indent=2)
+            ctx.zato.request.headers['Content-Type'] = 'application/json'
         elif ctx.zato.request.is_raw:
             data = ctx.zato.request.data_impl
-    else:
-        data = ''
+        elif ctx.zato.request.is_form:
+            data = ctx.zato.request.get('form', '')
+            files = ctx.zato.request.get('files', None)
+            ctx.zato.request.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+            if files is not None:
+                # multipart/formdata should let requests set the content-type header
+                del ctx.zato.request.headers['Content-Type']
 
     auth = None
 
@@ -74,7 +83,7 @@ def when_the_url_is_invoked(ctx, adapters=None):
         s.mount('https://', adapter)
 
     ctx.zato.response.data = s.request(
-        method, '{}{}{}'.format(address, url_path, qs), data=data, headers=ctx.zato.request.headers, auth=auth)
+        method, '{}{}{}'.format(address, url_path, qs), data=data, files=files, headers=ctx.zato.request.headers, auth=auth)
 
     # if the reply format is unset, assume it's the same as the request format
     # if the request format hasn't been specified either, assume 'RAW"
@@ -87,6 +96,9 @@ def when_the_url_is_invoked(ctx, adapters=None):
         ctx.zato.response.data_impl = json.loads(ctx.zato.response.data.text)
 
     elif response_format == 'RAW':
+        ctx.zato.response.data_impl = ctx.zato.response.data.text
+
+    elif response_format == 'FORM':
         ctx.zato.response.data_impl = ctx.zato.response.data.text
 
 # ################################################################################################################################
@@ -111,6 +123,7 @@ def set_request_format(ctx, format):
     ctx.zato.request.is_xml = ctx.zato.request.format == 'XML'
     ctx.zato.request.is_json = ctx.zato.request.format == 'JSON'
     ctx.zato.request.is_raw = ctx.zato.request.format == 'RAW'
+    ctx.zato.request.is_form = ctx.zato.request.format == 'FORM'
 
 @given('format "{format}"')
 @util.obtain_values
@@ -160,6 +173,36 @@ def given_request(ctx, request_path):
 @util.obtain_values
 def given_request_is(ctx, data):
     return given_request_impl(ctx, data)
+
+@given('request file "{name}" is "{value}"')
+@util.obtain_values
+def given_request_file(ctx, name, value):
+    ctx.zato.request.data_impl = None
+    files = ctx.zato.request.get('files', {})
+
+    full_path = util.get_full_path(ctx.zato.environment_dir, 'form', 'request', value)
+
+    if not os.path.isfile(full_path):
+        raise ValueError('File upload not found: {}'.format(full_path))
+
+    files[name] = open(full_path, 'rb')
+
+    ctx.zato.request.files = files
+
+@given('request param "{name}" is "{value}"')
+@util.obtain_values
+def given_request_param(ctx, name, value):
+    ctx.zato.request.data_impl = None
+    form = ctx.zato.request.get('form', {})
+    if name in form:
+        if isinstance(form[name], list):
+            form[name].append(value)
+        else:
+            form[name] = [form[name], value]
+    else:
+        form[name] = value
+
+    ctx.zato.request.form = form
 
 @given('query string "{query_string}"')
 @util.obtain_values

@@ -14,6 +14,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 # stdlib
 from json import loads
 from unittest import TestCase
+import urlparse
 
 # Bunch
 from bunch import Bunch
@@ -93,6 +94,41 @@ class WhenTestCase(TestCase):
 
         # Confirms the body we sent was received.
         self.assertDictEqual(loads(sent_request['request']['data']), data_impl)
+
+    def test_when_the_url_is_invoked_form(self):
+
+        form = {'key1': ['value1'], 'key2': ['value2']}
+
+        method = 'POST'
+        address = 'http://{}.example.com'.format(util.rand_string())
+        url_path = '/{}'.format(util.rand_string())
+        headers = {util.rand_string():util.rand_string(), util.rand_string():util.rand_string()}
+
+        ctx = Bunch(zato=Bunch(request=Bunch()))
+
+        ctx.zato.request.is_xml = False
+        ctx.zato.request.is_json = False
+        ctx.zato.request.is_raw = False
+        ctx.zato.request.is_form = True
+        ctx.zato.request.request_format = 'FORM'
+        ctx.zato.request.response_format = 'JSON'
+        ctx.zato.request.form = form
+        ctx.zato.request.data_impl = None
+        ctx.zato.request.method = method
+        ctx.zato.request.address = address
+        ctx.zato.request.url_path = url_path
+        ctx.zato.request.qs = ''
+        ctx.zato.request.headers = headers
+
+        common.when_the_url_is_invoked(ctx, [JSONEchoAdapter({})])
+        sent_request = loads(ctx.zato.response.data_impl['data'])
+
+        # Confirms the headers we sent were received.
+        for key, value in headers.items():
+            self.assertEquals(sent_request['request']['headers'][key], value)
+
+        # Confirms the form data we sent was received.
+        self.assertDictEqual(urlparse.parse_qs(sent_request['request']['data']), form)
 
 class GivenTestCase(TestCase):
 
