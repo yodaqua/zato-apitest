@@ -265,6 +265,14 @@ def given_i_store_a_random_date_under_name(ctx, name, format):
 def then_context_is_cleaned_up(ctx):
     ctx.zato = util.new_context(ctx, None)
 
+@then('form is cleaned up')
+@util.obtain_values
+def then_form_is_cleaned_up(ctx):
+    if 'form' in ctx.zato.request:
+        del ctx.zato.request['form']
+    if 'files' in ctx.zato.request:
+        del ctx.zato.request['files']
+
 @then('status is "{expected_status}"')
 @util.obtain_values
 def then_status_is(ctx, expected_status):
