@@ -46,10 +46,11 @@ def cli_init(ctx, path, prompt_run=True):
 def init(ctx, path):
     cli_init(ctx, path)
 
-@click.command()
+@click.command(context_settings=dict(allow_extra_args=True, ignore_unknown_options=True))
 @click.argument('path', type=click.Path(exists=True, file_okay=False, resolve_path=True))
-def run(path):
-    _run.handle(path)
+@click.pass_context
+def run(ctx, path):
+    _run.handle(path, ctx.args)
 
 @click.command()
 @click.argument('path', default=tempfile.gettempdir(), type=click.Path(exists=True, file_okay=False, resolve_path=True))

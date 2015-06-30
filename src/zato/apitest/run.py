@@ -21,13 +21,15 @@ from behave.runner import Runner
 # ConfigObj
 from configobj import ConfigObj
 
-def handle(path):
+def handle(path, args=None):
     file_conf = ConfigObj(os.path.join(path, 'features', 'config.ini'))
     try:
         behave_options = file_conf['behave']['options']
     except KeyError:
         raise RuntimeError("Behave config not found."
             " Are you running with the right path?")
+    if args:
+        behave_options += ' ' + ' '.join(args)
 
     conf = Configuration(behave_options)
     conf.paths = [os.path.join(path, 'features')]
