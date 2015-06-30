@@ -98,9 +98,8 @@ Let's dissect directories that were created after running ```apitest init```:
 
 ```
 ~/mytests
-├── config
-│   └── behave.ini
 └── features
+    ├── config.ini
     ├── demo.feature
     ├── environment.py
     ├── json
@@ -119,7 +118,7 @@ Let's dissect directories that were created after running ```apitest init```:
 
  Path                              | Description
 ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------
-```./config/behave.ini```          | Low-level configuration that is passed to the underlying [behave] (https://pypi.python.org/pypi/behave) library as-is.
+```./features/config.ini```        | Low-level configuration that is passed to the underlying [behave] (https://pypi.python.org/pypi/behave) library as-is.
 ```./features/demo.feature```      | A set of tests for a single feature under consideration.
 ```./features/environment.py```    | Place to keep hooks invoked throughout a test case's life-cycle in.
 ```./features/json/request/*```    | JSON requests, if any, needed as input to APIs under tests.
