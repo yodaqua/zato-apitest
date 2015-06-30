@@ -23,7 +23,11 @@ from configobj import ConfigObj
 
 def handle(path):
     file_conf = ConfigObj(os.path.join(path, 'features', 'config.ini'))
-    behave_options = file_conf['behave']['options']
+    try:
+        behave_options = file_conf['behave']['options']
+    except KeyError:
+        raise RuntimeError("Behave config not found."
+            " Are you running with the right path?")
 
     conf = Configuration(behave_options)
     conf.paths = [os.path.join(path, 'features')]
