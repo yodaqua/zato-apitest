@@ -28,7 +28,7 @@ What it can do
 
 - Use [JSON Pointers] (https://zato.io/blog/posts/json-pointer-rfc-6901.html) or [XPath] (https://en.wikipedia.org/wiki/XPath)
   to set request's elements to strings, integers, floats, lists, random ones from a set of values, random strings, dates now/random/before/after/between.
-  
+
 - Check that JSON and XML elements, exist, don't exist,
   that an element is an integer, float, list, empty, non-empty, that it belongs to a list or doesn't.
 
@@ -36,12 +36,12 @@ What it can do
 
 - Check that HTTP headers are or are not of expected value, that a header exists or not, contains a value or not, is empty or not,
   starts with a value or not and ends with a value or not.
-  
+
 - Read configuration from environment and config files.
 
 - Store values extracted out of previous steps for use in subsequent steps, i.e. get a list of objects, pick ID of the first one
   and use this ID in later steps.
-  
+
 - Can be integrated with JUnit
 
 - Can be very easily extended in Python
@@ -86,6 +86,10 @@ Workflow
 3. Update tests
 4. Execute ```apitest run /path/to/tests/directory``` when you are done with updates
 5. Jump to 3.
+
+Note that when you give additional options to the ```apitest run``` command, they will be passed to the behave test runner,
+just like the options stored in the config.ini file. For instance, in a test run you can exclude and include only certain
+features using the ```-e``` option and ```-i``` options provided by the behave test runner.
 
 Tests and related resources
 ---------------------------
@@ -234,7 +238,7 @@ Scenario: Prepare data
     Given I store "Maria Garca" under "cust_name"
     Given request is "{}"
     Given JSON Pointer "/customer_id" in request is "$MYAPP_DEFAULT_CUSTOMER"
-    
+
     When the URL is invoked
 
     Then I store "/login" from response under "cust_login"
