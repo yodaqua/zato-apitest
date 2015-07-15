@@ -62,6 +62,11 @@ For instance, on Debian/Ubuntu:
 ```bash
 $ sudo apt-get install -y libpq-dev libxml2-dev libxslt1-dev python-dev libyaml-dev
 ```
+For instance, on Fedora 22 (earlier replace dnf with yum):
+
+```bash
+$ sudo dnf install  libpqxx-devel libxml2-devel libxslt-devel python-devel libyaml-devel
+```
 
 Now, on to zato-apitest:
 
