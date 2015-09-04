@@ -26,7 +26,7 @@ def handle(path, args=None):
     try:
         behave_options = file_conf['behave']['options']
     except KeyError:
-        raise RuntimeError("Behave config not found."
+        raise ValueError("Behave config not found."
             " Are you running with the right path?")
     if args:
         behave_options += ' ' + ' '.join(args)
