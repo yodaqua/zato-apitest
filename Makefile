@@ -24,6 +24,7 @@ demo:
 	$(BIN_DIR)/apitest demo
 
 test:
+	$(MAKE) install
 	$(BIN_DIR)/nosetests $(CURDIR)/test/zato --with-coverage --cover-package=zato --nocapture
 	$(BIN_DIR)/flake8 $(CURDIR)/src/zato --count
 	$(BIN_DIR)/flake8 $(CURDIR)/test/zato --count
