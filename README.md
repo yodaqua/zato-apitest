@@ -112,10 +112,13 @@ Let's dissect directories that were created after running ```apitest init```:
     │       └── demo.json
     ├── steps
     │   └── steps.py
-    └── xml
+    ├── xml
+    │   ├── request
+    │   │   └── demo.xml
+    │   └── response
+    └── form
         ├── request
-        │   └── demo.xml
-        └── response
+           └── report.xls
 ```
 
 
@@ -129,6 +132,7 @@ Let's dissect directories that were created after running ```apitest init```:
 ```./features/steps/steps.py```    | Custom assertions go here.
 ```./features/xml/request/*```     | XML requests (including SOAP), if any, needed as input to APIs under tests.
 ```./features/xml/response/*```    | *(Currently not used, future versions will allow for comparing XML/SOAP responses directly)*
+```./features/form/request/*```    | Multipart-Encoded File uploads, if any to send in requests.
 
 Each set of related tests concerned with a particular feature is kept in its own *.feature file in /features.
 
