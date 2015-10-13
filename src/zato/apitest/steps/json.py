@@ -58,7 +58,7 @@ def given_json_pointer_in_request_is(ctx, path, value):
 @given('JSON Pointer "{path}" in request is a UUID')
 @util.obtain_values
 def given_json_pointer_in_request_is_a_uuid(ctx, path):
-    set_pointer(ctx, path, str(uuid.uuid4().hex))
+    set_pointer(ctx, path, uuid.uuid4().hex)
 
 @given('JSON Pointer "{path}" in request is an integer "{value}"')
 @util.obtain_values
