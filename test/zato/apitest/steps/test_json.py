@@ -67,7 +67,6 @@ class GivenTestCase(TestCase):
         json.given_json_pointer_in_request_is_a_uuid(self.ctx, '/' + path)
         self.assertIs(type(uuid.UUID(self.ctx.zato.request.data_impl[path], version=4)), uuid.UUID)
 
-
     def test_given_json_pointer_in_request_is_a_random_integer(self):
         path = util.rand_string()
         json.given_json_pointer_in_request_is_a_random_integer(self.ctx, '/' + path)
