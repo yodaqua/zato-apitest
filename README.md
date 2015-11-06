@@ -49,4 +49,5 @@ What it can do
 More information
 --------------------
 
-Check out the project's website for [more information](https://zato.io/docs/test/apitest/index.html).
+Check out the project's website for [more information](https://zato.io/docs/test/apitest/index.html),
+including a getting started tutorial and dozens of usage examples.
