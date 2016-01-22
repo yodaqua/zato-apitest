@@ -244,3 +244,30 @@ def then_json_pointer_is_an_empty_dict(ctx, path):
 def then_json_pointer_isnt_a_string(ctx, path, value):
     actual = get_pointer(ctx.zato.response.data_impl, path)
     assert actual != value, 'Expected `{}` != `{}`'.format(actual, value)
+
+# ###############################################################################################################################
+
+def _then_json_pointer_contains(ctx, path, expected):
+    actual_list = get_pointer(ctx.zato.response.data_impl, path)
+
+    for item in actual_list:
+        try:
+            assert_equals(item, expected)
+        except AssertionError:
+            pass
+        else:
+            return True
+    else:
+        raise AssertionError('Expected data `{}` not in `{}`'.format(expected, actual_list))
+
+@then('JSON Pointer "{path}" contains "{value}"')
+@util.obtain_values
+def then_json_pointer_contains(ctx, path, value):
+    return _then_json_pointer_contains(ctx, path, json.loads(value))
+
+@then('JSON Pointer "{path}" contains data from "{value}"')
+@util.obtain_values
+def then_json_pointer_contains_data_from(ctx, path, value):
+    return _then_json_pointer_contains(ctx, path, json.loads(util.get_data(ctx, 'response', value)))
+
+# ###############################################################################################################################
