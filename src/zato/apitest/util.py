@@ -12,7 +12,7 @@ Licensed under LGPLv3, see LICENSE.txt for terms and conditions.
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 # stdlib
-import csv, operator, os, random, uuid
+import csv, operator, os, random, uuid, re
 from collections import OrderedDict
 from datetime import timedelta
 from itertools import izip_longest
@@ -58,6 +58,12 @@ config_functions = {
     '@': get_value_from_config
 }
 
+config_patterns = {
+    '$': re.compile(r'\$\{(\w+)\}'),
+    '#': re.compile(r'\#\{(\w+)\}'),
+    '@': re.compile(r'\@\{(\w+)\}')
+}
+
 def obtain_values(func):
     """ Functions decorated with this one will be able to obtain values from config sources prefixed with $, # or @.
     """
@@ -68,6 +74,12 @@ def obtain_values(func):
                 if config_key in config_functions:
                     config_func = config_functions[config_key]
                     kwargs[kwarg] = config_func(ctx, value[1:])
+                else:
+                    for config_key,pattern in config_patterns.items():
+                        for match in pattern.findall(value):
+                            config_func = config_functions[config_key]
+                            kwargs[kwarg] = re.sub(r'\%s\{%s\}' % (config_key, match), str(config_func(ctx, match)), value)
+
         return func(ctx, *args, **kwargs)
     return inner
 
