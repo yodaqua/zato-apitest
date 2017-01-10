@@ -165,6 +165,10 @@ def now(format):
 def utcnow(format):
     return arrow_api.utcnow().format(format)
 
+def utcnow_minus_hour(format):
+    utc = arrow_api.utcnow()
+    return utc.replace(hours=-1).format(format)
+
 # ################################################################################################################################
 
 def date_after_before(base_date, format, direction, limit, needs_parse=True):
@@ -196,7 +200,7 @@ comparison_operators = {'equal to': '=',
                         'greater than': '>',
                         'less or equal to': '<=',
                         'greater or equal to': '>='}
-                                    
+
 def wrap_into_quotes(values):
     return '\'{}\''.format('\', \''.join(values.split(', ')))
 
